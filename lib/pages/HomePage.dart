@@ -37,32 +37,26 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future<void> fetchPharmacies() async {
-    // Call your API to fetch pharmacies
-    try {
-      final result = await Api().getPharmacyData(route: '/getPharmacy');
-      final response = json.decode(result.body);
+  Future<List<Map<String, dynamic>>> fetchPharmacies() async {
+  try {
+    final result = await Api().getPharmacyData(route: '/getPharmacy');
+    final response = json.decode(result.body);
 
-      if (response['status']) {
-        // Check if 'data' key exists in the response
-        if (response.containsKey('data')) {
-          // Cast the 'data' to a list of maps (assuming it's an array of objects)
-          setState(() {
-            pharmacyData = response['data'].cast<Map<String, dynamic>>();
-          });
-        } else {
-          // Handle the case where 'data' is missing
-          print('API response is missing the "data" key.');
-        }
+    if (response['status']) {
+      if (response.containsKey('data')) {
+        List<Map<String, dynamic>> pharmacyData = response['data'].cast<Map<String, dynamic>>();
+        return pharmacyData; // Return the fetched pharmacy data
       } else {
-        // Handle error if the request fails
-        print('Failed to fetch pharmacies: ${response['message']}');
+        print('API response is missing the "data" key.');
       }
-    } catch (e) {
-      print('Error: $e');
+    } else {
+      print('Failed to fetch pharmacies: ${response['message']}');
     }
+  } catch (e) {
+    print('Error: $e');
   }
-
+  return []; // Return an empty list in case of error or missing data
+}
   void _startAutoScroll() {
     int currentIndex = 0; // Track the current index
 
@@ -194,27 +188,49 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
               height: 250, // Adjust height as needed
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: _scrollController,
-                itemCount: pharmacyData.length,
-                itemBuilder: (context, index) {
-                  final pharmacy = pharmacyData[index];
-                  return PharmacyCard(
-                    name: pharmacy['name'] ??
-                        'Unknown', // Use 'Unknown' if name is null
-                    image: 'http://10.0.2.2:8000/productimage/${pharmacy['image']}',
-                    distance: pharmacy['distance'] != null
-                        ? '${pharmacy['distance']} km'
-                        : 'Distance unavailable',
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PharmacyDetailsPage(pharmacyData: pharmacy),
+              child: FutureBuilder(
+                future: fetchPharmacies(), // Call fetchPharmacies() here
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child:
+                          CircularProgressIndicator(), // Show a progress indicator while loading
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                          'Error: ${snapshot.error}'), // Display an error message if fetching fails
+                    );
+                  } else {
+                    // If data is successfully fetched, build the ListView
+                    final pharmacyData = snapshot.data!;
+                    return Container(
+                      height: 250, // Adjust height as needed
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        controller: _scrollController,
+                        itemCount: pharmacyData.length,
+                        itemBuilder: (context, index) {
+                          final pharmacy = pharmacyData[index];
+                          return PharmacyCard(
+                            name: pharmacy['name'] ?? 'Unknown',
+                            image:
+                                'http://192.168.91.60:8000/productimage/${pharmacy['image']}',
+                            distance: pharmacy['distance'] != null
+                                ? '${pharmacy['distance']} km'
+                                : 'Distance unavailable',
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PharmacyDetailsPage(pharmacyData: pharmacy),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
               ),
             ),
