@@ -37,6 +37,8 @@ class _RegisterPageState extends State<RegisterPage> {
         await Api().postRegisterData(route: '/auth/register', data: data);
     final response = jsonDecode(result.body);
     if (response['status']) {
+      final token = response['token'];
+      await Api().storeAuthToken(token);
       // Registration successful
       print('User registered successfully');
       // Navigate to home page

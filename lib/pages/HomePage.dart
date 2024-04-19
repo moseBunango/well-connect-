@@ -203,8 +203,7 @@ class _HomePageState extends State<HomePage> {
                   return PharmacyCard(
                     name: pharmacy['name'] ??
                         'Unknown', // Use 'Unknown' if name is null
-                    image:
-                        pharmacy['image'] ?? 'lib/assets/landingImageTest.png',
+                    image: 'http://10.0.2.2:8000/productimage/${pharmacy['image']}',
                     distance: pharmacy['distance'] != null
                         ? '${pharmacy['distance']} km'
                         : 'Distance unavailable',

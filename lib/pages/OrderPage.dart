@@ -90,8 +90,9 @@ class _OrderPageState extends State<OrderPage> {
         imagePath: fileFullPath,
       );
       final response = json.decode(result.body);
-
+      
       if (response['status']) {
+        print("success");
         Fluttertoast.showToast(
           msg: "Order placed successfully",
           toastLength: Toast.LENGTH_SHORT,
@@ -122,11 +123,11 @@ class _OrderPageState extends State<OrderPage> {
         route: '/moveCartsToOrderHistory',
       );
       final response = json.decode(result.body);
-
+      print(response['status']);
       if (response['status']) {
-         setState(() {
-        cartItems.clear();
-      });
+        setState(() {
+          cartItems.clear();
+        });
         Fluttertoast.showToast(
           msg: "added to order history",
           toastLength: Toast.LENGTH_SHORT,

@@ -25,8 +25,13 @@ class PharmacyCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipOval(
-                  child: Image.asset(image,
-                      width: 150, height: 150, fit: BoxFit.cover)),
+              child: Image.network(
+                  image, 
+                  width: 150,
+                   height: 150,
+                  fit: BoxFit.cover,
+          ),
+          ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
