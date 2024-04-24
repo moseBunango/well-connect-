@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
@@ -59,9 +60,10 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
       appBar: AppBar(
         title: Text(
           "Risk Assesment",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Color(0xff2b4260), // Teal color
+        elevation: 0.0, // Remove shadow
       ),
       body: Padding(
           padding: EdgeInsets.all(16),
@@ -73,16 +75,19 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     "Task to be filled",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: PhoneSize(context).adaptFontSize(20),
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: PhoneSize(context).adaptHeight(10),
                   ),
                   Row(
                     children: [
-                      Expanded(child: Text('Age')),
+                      Expanded(child: Text('Age',
+                      style: TextStyle(
+                      fontWeight: FontWeight.bold,))),
                       SizedBox(
-                        width: 40,
+                        width: PhoneSize(context).adaptHeight(40),
                       ),
                       Expanded(
                         child: TextFormField(
@@ -100,13 +105,15 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: PhoneSize(context).adaptHeight(10),
                   ),
                   Row(
                     children: [
-                      Expanded(child: Text('weight')),
+                      Expanded(child: Text('weight',
+                      style: TextStyle(
+                      fontWeight: FontWeight.bold,))),
                       SizedBox(
-                        width: 40,
+                        width:PhoneSize(context).adaptHeight(40),
                       ),
                       Expanded(
                         child: TextFormField(
@@ -124,13 +131,15 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: PhoneSize(context).adaptHeight(10),
                   ),
                   Row(
                     children: [
-                      Expanded(child: Text('height')),
+                      Expanded(child: Text('height',
+                      style: TextStyle(
+                      fontWeight: FontWeight.bold,))),
                       SizedBox(
-                        width: 40,
+                        width:PhoneSize(context).adaptHeight(40),
                       ),
                       Expanded(
                         child: TextFormField(
@@ -148,13 +157,15 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: PhoneSize(context).adaptHeight(10),
                   ),
                   Row(
                     children: [
-                      Expanded(child: Text('blood pressure')),
+                      Expanded(child: Text('blood pressure',
+                      style: TextStyle(
+                      fontWeight: FontWeight.bold,))),
                       SizedBox(
-                        width: 40,
+                        width: PhoneSize(context).adaptHeight(40),
                       ),
                       Expanded(
                         child: TextFormField(
@@ -172,13 +183,15 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: PhoneSize(context).adaptHeight(10),
                   ),
                   Row(
                     children: [
-                      Expanded(child: Text('blood sugar level')),
+                      Expanded(child: Text('blood sugar level',
+                      style: TextStyle(
+                      fontWeight: FontWeight.bold,))),
                       SizedBox(
-                        width: 40,
+                        width: PhoneSize(context).adaptHeight(40),
                       ),
                       Expanded(
                         child: TextFormField(
@@ -196,7 +209,7 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     ],
                   ),
                   SizedBox(
-                    height: 20,
+                    height: PhoneSize(context).adaptHeight(20),
                   ),
                   Padding(
                     padding: EdgeInsets.all(8),
@@ -209,7 +222,7 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: PhoneSize(context).adaptHeight(10),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -217,7 +230,7 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     },
                     child: Text("perform NCD Evaluation"),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.yellow, padding: EdgeInsets.all(15.0)),
+                        primary: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
                   ),
                 ],
               ),

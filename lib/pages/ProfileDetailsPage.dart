@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'dart:convert';
 
@@ -173,15 +174,14 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
       appBar: AppBar(
         title: Text(
           'Profile Details',
-          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Color(0xff2b4260),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.delete,
-              color: Colors.black,
+              color: Colors.teal,
             ),
             onPressed: () {
               _showDeleteConfirmationDialog();
@@ -198,42 +198,42 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               Text(
                 "Contact information",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: PhoneSize(context).adaptFontSize(24),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Email', email),
               SizedBox(height: 10),
               _buildDisplayField('User name', username),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               Text(
                 "User's Address",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: PhoneSize(context).adaptFontSize(24),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('First name', firstName),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Last name', lastName),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Street', street),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('City', city),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Country', country),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Phone number', phoneNumber),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField(
                 'Date of Birth',
                 dateOfBirth != null
                     ? '${dateOfBirth!.day}/${dateOfBirth!.month}/${dateOfBirth!.year}'
                     : '',
               ),
-              SizedBox(height: 10),
+              SizedBox(height:PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Gender', gender),
               ElevatedButton(
                 onPressed: () {
@@ -241,10 +241,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                 },
                 child: Text("Update my information"),
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.yellow, padding: EdgeInsets.all(15.0)),
+                    primary: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
               ),
               SizedBox(
-                height: 10,
+                height: PhoneSize(context).adaptHeight(10),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -254,10 +254,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     ? CircularProgressIndicator()
                     : Text(
                         "Logout",
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: Colors.white),
                       ),
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.blueGrey, padding: EdgeInsets.all(15.0)),
+                    primary: Colors.red, padding: EdgeInsets.all(15.0)),
               ),
             ],
           ),

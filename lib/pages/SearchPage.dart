@@ -83,6 +83,43 @@ class _SearchPageState extends State<SearchPage> {
       );
     }
   }
+ void filteredMedicine() {
+  // Filter the medicines based on the search query
+  List<Map<String, dynamic>> filteredMedicines = medicineData
+      .where((medicine) =>
+          medicine['medicine_name']
+              .toString()
+              .toLowerCase()
+              .startsWith(searchQuery))
+      .toList();
+
+  if (searchQuery.isNotEmpty) { // Check if search query is not empty
+    if (filteredMedicines.isNotEmpty) {
+      // Update the UI with the filtered medicines
+      setState(() {
+        // Assign the filteredMedicines list to a new list to display below the search field
+        this.filteredMedicines = filteredMedicines;
+      });
+    } else {
+      // If no medicines found, clear the displayed list
+      setState(() {
+        this.filteredMedicines = [];
+      });
+      // Show a message to indicate no medicines found
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No medicines found for "$searchQuery"'),
+        ),
+      );
+    }
+  } else {
+    // If search query is empty, clear the displayed list
+    setState(() {
+      this.filteredMedicines = [];
+    });
+  }
+}
+ 
 
 
   @override
@@ -91,9 +128,8 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: Text(
           'Search',
-          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Color(0xff2b4260),
         centerTitle: true,
       ),
       body: Padding(
@@ -108,6 +144,12 @@ class _SearchPageState extends State<SearchPage> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: TextFormField(
+                  onChanged: (value) {
+                  setState(() {
+                    searchQuery = value.toLowerCase(); // Update searchQuery with the typed text
+                  });
+                  filteredMedicine(); // Call filteredMedicine() whenever text changes
+                },
                   controller: searchMedController,
                   decoration: InputDecoration(
                     hintText: "Search NCD medicine ",
@@ -126,6 +168,27 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             ),
+            // Display filtered medicines
+          if (filteredMedicines.isNotEmpty)
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredMedicines.length,
+                itemBuilder: (context, index) {
+                  final medicine = filteredMedicines[index];
+                  return ListTile(
+                    title: Text(medicine['medicine_name']),
+                    onTap: () {
+                      // Navigate to medicine details page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MedicineListsPage(medicineData: medicine),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),),
             SizedBox(
               height: 20,
             ),
@@ -175,12 +238,13 @@ class _SearchPageState extends State<SearchPage> {
             Icon(
               icon,
               size: 50,
-              color: Colors.black,
+              color: Colors.teal,
             ),
             SizedBox(height: 10),
             Text(
               name,
               style: TextStyle(
+                color: Colors.teal,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),

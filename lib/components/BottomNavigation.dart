@@ -13,8 +13,8 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  int _selectedIndex = 0;
 
+  int _selectedIndex = 0;
   final List<Widget> _pages = [
     HomePage(),
     SearchPage(),
@@ -22,47 +22,47 @@ class _BottomNavigationState extends State<BottomNavigation> {
     ProfileDetailsPage(),
     ProfilePage(),
   ];
-
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      
     });
-    
+
     // Navigate to the corresponding page
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) => _pages[index],
       ),
     );
-  }
 
+  }
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-          backgroundColor: Colors.blueGrey,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Search',
-          backgroundColor: Colors.blueGrey,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart),
-          label: 'Orders',
-          backgroundColor: Colors.blueGrey,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-          backgroundColor: Colors.blueGrey,
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-    );
+    return  BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: Color(0xff2b4260),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        unselectedItemColor:Colors.teal ,
+        selectedItemColor: Colors.teal,
+        onTap: _onItemTapped,
+      );
   }
 }

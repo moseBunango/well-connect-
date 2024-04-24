@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'dart:convert';
 
@@ -82,10 +83,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.yellow[100],
+        backgroundColor:Color(0xff2b4260),
         title: Text(
           'Profile update',
-          style: TextStyle(color: Colors.black),
         ),
       ),
       body: Padding(
@@ -97,12 +97,12 @@ class _ProfilePageState extends State<ProfilePage> {
               Text(
                 "Users Address",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: PhoneSize(context).adaptFontSize(24),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: PhoneSize(context).adaptFontSize(10),
               ),
               Row(
                 children: [
@@ -110,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: TextFormField(
                       onTap: () => _selectDate(context),
                       decoration: InputDecoration(
-                        labelText: _selectedDate != null
+                        hintText: _selectedDate != null
                             ? "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}"
                             : " Date of Birth",
                         filled: true,
@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       readOnly: true,
                     ),
                   ),
-                  SizedBox(width: 10), // Spacing between TextFields
+                  SizedBox(width: PhoneSize(context).adaptHeight(10)), // Spacing between TextFields
                   Expanded(
                     flex: 1,
                     child: DropdownButtonFormField<String>(
@@ -150,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               SizedBox(
-                height: 10,
+                height: PhoneSize(context).adaptHeight(10),
               ),
               Row(
                 children: [
@@ -167,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           _firstNameController, // Add your controller if needed
                     ),
                   ),
-                  SizedBox(width: 10), // Spacing between TextFields
+                  SizedBox(width: PhoneSize(context).adaptHeight(10)), // Spacing between TextFields
                   Expanded(
                     child: TextFormField(
                       decoration: InputDecoration(
@@ -183,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 10.0),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               Row(
                 children: [
                   Expanded(
@@ -199,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           _streetController, // Add your controller if needed
                     ),
                   ),
-                  SizedBox(width: 10), // Spacing between TextFields
+                  SizedBox(width: PhoneSize(context).adaptHeight(10)), // Spacing between TextFields
                   Expanded(
                     child: TextFormField(
                       decoration: InputDecoration(
@@ -216,7 +216,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               SizedBox(
-                height: 10,
+                height: PhoneSize(context).adaptHeight(10),
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -231,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _countryController,
               ),
               SizedBox(
-                height: 10,
+                height: PhoneSize(context).adaptHeight(10),
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -246,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _phoneNumberController,
               ),
               SizedBox(
-                height: 20,
+                height: PhoneSize(context).adaptHeight(20),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -254,7 +254,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 child: Text("Update profile"),
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.yellow, padding: EdgeInsets.all(15.0)),
+                    primary: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
               ),
             ],
           ),

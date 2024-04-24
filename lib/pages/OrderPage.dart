@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
@@ -17,6 +18,8 @@ class _OrderPageState extends State<OrderPage> {
   String fileFullPath = "";
   bool fileSelected = false;
   List<dynamic> cartItems = [];
+  String? selectedPaymentMethod;
+
 
   void _pickFile() async {
     String? filePath = await FilePicker.platform
@@ -149,15 +152,49 @@ class _OrderPageState extends State<OrderPage> {
     }
   }
 
+  void _completePaymentAndPlaceOrder() async {
+    if (selectedPaymentMethod == null) {
+      Fluttertoast.showToast(
+        msg: "Please select a payment method",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    if (selectedPaymentMethod == 'Pay after delivery') {
+      await placeOrder();
+    } else if (selectedPaymentMethod == 'Pay online before delivery') {
+      // Implement payment gateway integration here
+      // For example, you can use Flutterwave API for payment processing
+      try {
+        // Simulate a delay to mimic a payment process
+        await Future.delayed(Duration(seconds: 3));
+        // After completing the payment, place the order
+        await placeOrder();
+      } catch (e) {
+        print('Error completing payment and placing order: $e');
+        Fluttertoast.showToast(
+          msg: e.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Color(0xff2b4260),
         centerTitle: true,
         title: Text(
           'Order',
-          style: TextStyle(color: Colors.black),
         ),
       ),
       body: SingleChildScrollView(
@@ -166,25 +203,52 @@ class _OrderPageState extends State<OrderPage> {
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/OrderHistoryPage');
-                  },
-                  child: Text(
-                    'view my order History',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children:[ TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/OrderHistoryPage');
+                      },
+                      child: Text(
+                        'view my order History',
+                        style: TextStyle(color: Colors.teal),
+                      ),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                    onPressed: _pickFile,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xff2b4260),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.attach_file,color: Colors.teal,),
+                        Text(fileSelected
+                            ? fileName
+                            : 'Upload prescription'
+                            ,style: TextStyle(color: Colors.teal),), // Display file name if selected, otherwise default text
+                      ],
                     ),
                   ),
+                               ] ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: PhoneSize(context).adaptHeight(10),
                 ),
+                cartItems.isEmpty
+                    ? Text(
+                        'You have not made any orders',
+                        style: 
+                        TextStyle(fontSize: PhoneSize(context).adaptFontSize(18),fontWeight: FontWeight.bold),):
                 // Your order form fields here
                 ListView.builder(
                   shrinkWrap: true,
@@ -215,39 +279,52 @@ class _OrderPageState extends State<OrderPage> {
                   },
                 ),
                 SizedBox(
-                  height: 10,
+                  height: PhoneSize(context).adaptHeight(10),
+                ),
+                // Payment options
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Select Payment Method:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    RadioListTile<String>(
+                      title: Text('Pay after delivery'),
+                      value: 'Pay after delivery',
+                      groupValue: selectedPaymentMethod,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedPaymentMethod = value;
+                        });
+                      },
+                    ),
+                    RadioListTile<String>(
+                      title: Text('Pay online before delivery'),
+                      value: 'Pay online before delivery',
+                      groupValue: selectedPaymentMethod,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedPaymentMethod = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 // Button to pick files
-                ElevatedButton(
-                  onPressed: _pickFile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey,
-                    padding: EdgeInsets.all(10),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.attach_file),
-                      Text(fileSelected
-                          ? fileName
-                          : 'Upload prescription'), // Display file name if selected, otherwise default text
-                    ],
-                  ),
-                ),
                 SizedBox(
-                  height: 10,
+                  height: PhoneSize(context).adaptHeight(10),
                 ),
 
                 // Place order button
                 ElevatedButton(
-                  onPressed: placeOrder,
+                  onPressed: _completePaymentAndPlaceOrder,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.yellow,
+                    backgroundColor: Color(0xff2b4260),
                     padding: EdgeInsets.all(20),
                   ),
                   child: Text(
-                    'Place My Order',
-                    style: TextStyle(color: Colors.black),
+                    'Comleete payments & place order',
                   ),
                 ),
               ],
