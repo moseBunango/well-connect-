@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 
 class MedicineListsPage extends StatelessWidget {
   final Map<String, dynamic> medicineData;
@@ -13,9 +14,8 @@ class MedicineListsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.yellow[100],
-        title: Text(medicineData['medicine_name'],
-            style: TextStyle(color: Colors.black)),
+        backgroundColor: Color(0xff2b4260),
+        title: Text(medicineData['medicine_name'],style: TextStyle(color: Colors.white),),
       ),
       body: SingleChildScrollView(
         // Allow scrolling if content overflows
@@ -25,30 +25,56 @@ class MedicineListsPage extends StatelessWidget {
             crossAxisAlignment:
                 CrossAxisAlignment.start, // Align content to left
             children: [
-              Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween, // Align horizontally
-                children: [
-                  Text(
-                    medicineData['medicine_name'],
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+             SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+               child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Color(0xff2b4260),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  Text(
-                    medicineData['price'],
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children:[ 
+                          Text(
+                          "Name: ${medicineData['medicine_name']}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: PhoneSize(context).adaptFontSize(18),
+                            color: Colors.white,
+                          ),
+                        ), 
+                      SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                      Text(
+                        "Price: TZS${medicineData['price']}/=",
+                        style: TextStyle(
+                          color: Colors.white,fontSize: PhoneSize(context).adaptFontSize(18)
+                        ),
+                      ),
+                      ]),
+                      Column(
+                        children:[ Text(
+                          "Category: ${medicineData['category']}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,fontSize: PhoneSize(context).adaptFontSize(18)
+                          ),
+                        ),
+                        SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                        Text("")
+                    ]),
+                    ],
                   ),
-                  Text(
-                    medicineData['category'],
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
+                ),
+             ),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               Text(
                 "Available NCD Medicines",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: _buildMedicineTable(
@@ -63,19 +89,24 @@ class MedicineListsPage extends StatelessWidget {
 
   Widget _buildMedicineTable(
       List<Map<String, dynamic>> medicineData, BuildContext context) {
+        int counter = 1;
     return DataTable(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10.0),
       ),
+      columnSpacing: 35,
       columns: [
-        DataColumn(label: Text('Pharmacy Name')),
-        DataColumn(label: Text('Location')),
-        DataColumn(label: Text('Distance')),
+        DataColumn(label: Text('No',style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(label: Text('Pharmacy Name',style: TextStyle(fontWeight: FontWeight.bold ),)),
+        DataColumn(label: Text('Location',style: TextStyle(fontWeight: FontWeight.bold ),)),
+        DataColumn(label: Text('Distance',style: TextStyle(fontWeight: FontWeight.bold
+                      ),)),
       ],
       rows: medicineData.expand<DataRow>((medicine) {
         return medicine['pharmacies'].map<DataRow>((pharmacy) {
           return DataRow(cells: [
+            DataCell(Text('${counter++}')),
             DataCell(
               GestureDetector(
                 onTap: () {
@@ -84,15 +115,13 @@ class MedicineListsPage extends StatelessWidget {
                       medicine['medicine_name'],
                       pharmacy['name'],
                       pharmacy['location'],
-                      pharmacy['distance'],
+                      
                       medicine['price'],
                       medicine['category']);
                 },
-                child: Text(pharmacy['name'].toString()),
-              ),
-            ),
-            DataCell(Text(pharmacy['location'].toString())),
-            DataCell(Text(pharmacy['distance'].toString())),
+                child: Text(pharmacy['name'].toString(),), ), ),
+            DataCell(Text(pharmacy['location'].toString(),)),
+            DataCell(Text(pharmacy['distance'].toString(),)),
           ]);
         }).toList();
       }).toList(),
@@ -105,7 +134,7 @@ class MedicineListsPage extends StatelessWidget {
       String medicineName,
       String pharmacyName,
       String pharmacyLocation,
-      String pharmacyDistance,
+      
       String medicinePrice,
       String medicineCategory) {
     showDialog(
@@ -128,7 +157,7 @@ class MedicineListsPage extends StatelessWidget {
                     medicineName,
                     pharmacyName,
                     pharmacyLocation,
-                    pharmacyDistance,
+                   
                     medicinePrice,
                     medicineCategory);
                 Navigator.of(context).pop(true);
@@ -147,7 +176,6 @@ class MedicineListsPage extends StatelessWidget {
       String medicineName,
       String pharmacyName,
       String pharmacyLocation,
-      String pharmacyDistance,
       String medicinePrice,
       String medicineCategory) async {
     // Here you can add the code to add the medicine details to your cart or orders table
@@ -177,7 +205,7 @@ class MedicineListsPage extends StatelessWidget {
   msg: "failed to add to cart",
   toastLength: Toast.LENGTH_SHORT,
   gravity: ToastGravity.BOTTOM,
-  backgroundColor: Colors.green,
+  backgroundColor: Colors.red,
   textColor: Colors.white,
 );
     }

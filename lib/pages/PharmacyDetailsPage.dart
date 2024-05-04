@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 class PharmacyDetailsPage extends StatelessWidget {
   final Map<String, dynamic> pharmacyData;
 
@@ -12,9 +13,9 @@ class PharmacyDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Color(0xff2b4260),
         title:
-            Text(pharmacyData['name'], style: TextStyle(color: Colors.black)),
+            Text(pharmacyData['name'],style: TextStyle(color: Colors.white),),
       ),
       body: SingleChildScrollView(
         // Allow scrolling if content overflows
@@ -24,26 +25,57 @@ class PharmacyDetailsPage extends StatelessWidget {
             crossAxisAlignment:
                 CrossAxisAlignment.start, // Align content to left
             children: [
-              Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween, // Align horizontally
-                children: [
-                  Text(
-                    pharmacyData['name'],
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Color(0xff2b4260),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  Text(
-                    'Distance: ${pharmacyData['distance']}',
-                    style: TextStyle(fontSize: 18),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children:[ 
+                          Text(
+                          "Name: ${pharmacyData['name']}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: PhoneSize(context).adaptFontSize(18),
+                            color: Colors.white,
+                          ),
+                        ), 
+                      SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                      Text(
+                        'Distance: ${pharmacyData['distance']}',
+                        style: TextStyle(
+                          color: Colors.white,fontSize:PhoneSize(context).adaptFontSize(18)
+                        ),
+                      ),
+                      ]),
+                      SizedBox(width: PhoneSize(context).adaptHeight(30)),
+                      Column(
+                        children:[ Text(
+                          "Location: ${pharmacyData['location']}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,fontSize:PhoneSize(context).adaptFontSize(18)
+                          ),
+                        ),
+                        SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                        Text("")
+                    ]),
+                    ],
                   ),
-                ],
+                ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: PhoneSize(context).adaptHeight(20)),
               Text(
                 "Available NCD Medicines",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(20)),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: _buildMedicineTable(pharmacyData['medicines'], context),
@@ -66,6 +98,7 @@ class PharmacyDetailsPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       columns: const [
+        DataColumn(label: Text('No',style: TextStyle(fontWeight: FontWeight.bold))),
         DataColumn(
             label: Text('Medicine Name',
                 style: TextStyle(fontWeight: FontWeight.bold))),
@@ -85,8 +118,10 @@ class PharmacyDetailsPage extends StatelessWidget {
   // Function to create a DataRow for each medicine
   DataRow _medicineDataRow(
       Map<String, dynamic> medicine, BuildContext context) {
+        int counter = 1;
     return DataRow(
       cells: [
+        DataCell(Text('${counter++}')),
         DataCell(GestureDetector(
             onTap: () {
               _showConfirmationDialog(context, medicine);
@@ -101,7 +136,7 @@ class PharmacyDetailsPage extends StatelessWidget {
             onTap: () {
               _showConfirmationDialog(context, medicine);
             },
-            child: Text('₹ ${medicine['price'] ?? 'Unknown'}'))),
+            child: Text('Tzs ${medicine['price'] ?? 'Unknown'}/='))),
       ],
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PharmacyCard extends StatelessWidget {
+class PharmacyCard extends StatefulWidget {
   final String name;
   final String distance;
   final String image;
@@ -14,43 +14,90 @@ class PharmacyCard extends StatelessWidget {
       required this.onTap});
 
   @override
+  State<PharmacyCard> createState() => _PharmacyCardState();
+}
+
+class _PharmacyCardState extends State<PharmacyCard> {
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
-        onTap: onTap,
-        child: Card(
-          color: Colors.yellow[100],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipOval(
-                  child: Image.asset(image,
-                      width: 150, height: 150, fit: BoxFit.cover)),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      'Distance: $distance',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                  ],
+        onTap: () async {
+          setState(() {
+            _isLoading = true; // Show loader when card is tapped
+          });
+          await Future.delayed(Duration(seconds: 2)); // Simulate loading for 2 seconds
+          widget.onTap();
+          setState(() {
+            _isLoading = false; // Hide loader after loading is complete
+          });
+        },
+        child:  Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+             child: Container(
+            width: 200, // Adjust the width as needed
+            height: 280, // Adjust the height as needed
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(24.0),
+                    topRight: Radius.circular(24.0),
+                  ),
+                  child: Image.network(
+                    widget.image,
+                    width: double.infinity,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                      return Container(
+                        child: Center(
+                          child: Image.asset("lib/assets/pharmacyimage.png")
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
+                if (_isLoading)
+                  Center(
+                    child: CircularProgressIndicator(), // Show loader
+                  ),
+              Positioned(
+                  bottom: 12.0,
+                  left: 12.0,
+                  right: 12.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.name,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Distance: ${widget.distance}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),
-      ),
+      ),)
     );
   }
 }

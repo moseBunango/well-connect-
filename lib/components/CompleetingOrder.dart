@@ -6,16 +6,17 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:well_connect_app/pages/FlutterWavePayment.dart';
 
-class OrderPage extends StatefulWidget {
-  const OrderPage({super.key});
+
+class CompleetingOrder extends StatefulWidget {
+  const CompleetingOrder({super.key});
 
   @override
-  State<OrderPage> createState() => _OrderPageState();
+  State<CompleetingOrder> createState() => _CompleetingOrderState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _CompleetingOrderState extends State<CompleetingOrder> {
+
   String fileName = '';
   String fileFullPath = "";
   bool fileSelected = false;
@@ -36,12 +37,12 @@ class _OrderPageState extends State<OrderPage> {
       });
     }
   }
-
   @override
   void initState() {
     super.initState();
     fetchCartData();
   }
+
 
   Future<void> fetchCartData() async {
     // Call your API to fetch pharmacies
@@ -165,64 +166,7 @@ class _OrderPageState extends State<OrderPage> {
     }
   }
 
-  void _completePaymentAndPlaceOrder() async {
-    if (selectedPaymentMethod == null) {
-      Fluttertoast.showToast(
-        msg: "Please select a payment method",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
-      return;
-    }
-
-    // Check if a prescription file is selected
-  if (!fileSelected) {
-    Fluttertoast.showToast(
-      msg: "Please upload a prescription",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
-    return; // Return without proceeding if no prescription is selected
-  }
-
-    setState(() {
-      _isLoading = true; // Show loader when button is pressed
-    });
-
-    // Timer to handle timeout
-    var timer = Timer(Duration(seconds: 20), () {
-      setState(() {
-        _isLoading = false;
-        _showErrorPage(); // Call function to display error page
-      });
-    });
-
-    if (selectedPaymentMethod == 'Pay after delivery') {
-      await Future.delayed(Duration(seconds: 3));
-      await placeOrder();
-      timer.cancel();
-      setState(() {
-        _isLoading = false; // Hide loader after payment and order attempt
-      });
-    } else if (selectedPaymentMethod == 'Pay online before delivery') {
-      
-          // Navigate to the FlutterwavePayment page
-          Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FlutterwavePayment()),
-          );
-          timer.cancel();
-          setState(() {
-            _isLoading = false; // Hide loader after payment and order attempt
-          });
-        
-      }
-  }
-
+ 
   void _showErrorPage() {
     // You can display a dialog or navigate to a separate error screen
     showDialog(
@@ -241,7 +185,6 @@ class _OrderPageState extends State<OrderPage> {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -263,21 +206,6 @@ class _OrderPageState extends State<OrderPage> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/OrderHistoryPage');
-                          },
-                          child: Text(
-                            'view my order History',
-                            style: TextStyle(color: Colors.teal),
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
-                            ),
-                          ),
-                        ),
                         ElevatedButton(
                           onPressed: _pickFile,
                           style: ElevatedButton.styleFrom(
@@ -305,7 +233,7 @@ class _OrderPageState extends State<OrderPage> {
                 ),
                 cartItems.isEmpty
                     ? Text(
-                        'Currently you do not have any orders',
+                        'Currently you do not have any orders any orders',
                         style: TextStyle(
                             fontSize: PhoneSize(context).adaptFontSize(18),
                             fontWeight: FontWeight.bold),
@@ -344,36 +272,6 @@ class _OrderPageState extends State<OrderPage> {
                 SizedBox(
                   height: PhoneSize(context).adaptHeight(10),
                 ),
-                // Payment options
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Select Payment Method:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    RadioListTile<String>(
-                      title: Text('Pay after delivery'),
-                      value: 'Pay after delivery',
-                      groupValue: selectedPaymentMethod,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedPaymentMethod = value;
-                        });
-                      },
-                    ),
-                    RadioListTile<String>(
-                      title: Text('Pay online before delivery'),
-                      value: 'Pay online before delivery',
-                      groupValue: selectedPaymentMethod,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedPaymentMethod = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
                 // Button to pick files
                 SizedBox(
                   height: PhoneSize(context).adaptHeight(10),
@@ -381,7 +279,7 @@ class _OrderPageState extends State<OrderPage> {
 
                 // Place order button
                 ElevatedButton(
-                  onPressed: _completePaymentAndPlaceOrder,
+                  onPressed: placeOrder,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xff2b4260),
                     padding: EdgeInsets.all(15),
@@ -393,7 +291,7 @@ class _OrderPageState extends State<OrderPage> {
                           valueColor: AlwaysStoppedAnimation(Colors.teal),
                         )
                       : Text(
-                          'Complete payments & place order',style: TextStyle(color: Colors.white),
+                          'place order',style: TextStyle(color: Colors.white),
                         ),
                 ),
               ],

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'dart:convert';
+import 'dart:async';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -53,8 +55,17 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
       _isLoggingout = true;
     });
 
+    // Timer to handle timeout
+    var timer = Timer(Duration(seconds: 20), () {
+      setState(() {
+        _isLoggingout = false;
+        _showErrorPage(); // Call function to display error page
+      });
+    });
+
     final result = await Api().logoutData(route: '/auth/logout');
     final response = jsonDecode(result.body);
+    timer.cancel();
 
     print(response['status']);
 
@@ -115,6 +126,27 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     }
   }
 
+  void _showErrorPage() {
+    // Replace this with your actual error page logic
+    // You can display a dialog or navigate to a separate error screen
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('request timed out. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   Future<void> _showDeleteConfirmationDialog() async {
     return showDialog(
       context: context,
@@ -172,16 +204,15 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Profile Details',
-          style: TextStyle(color: Colors.black),
+          'Profile Details',style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Color(0xff2b4260),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.delete,
-              color: Colors.black,
+              color: Colors.teal,
             ),
             onPressed: () {
               _showDeleteConfirmationDialog();
@@ -198,53 +229,53 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               Text(
                 "Contact information",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: PhoneSize(context).adaptFontSize(24),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Email', email),
               SizedBox(height: 10),
               _buildDisplayField('User name', username),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               Text(
                 "User's Address",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: PhoneSize(context).adaptFontSize(24),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('First name', firstName),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Last name', lastName),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Street', street),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('City', city),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Country', country),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Phone number', phoneNumber),
-              SizedBox(height: 10),
+              SizedBox(height: PhoneSize(context).adaptHeight(10)),
               _buildDisplayField(
                 'Date of Birth',
                 dateOfBirth != null
                     ? '${dateOfBirth!.day}/${dateOfBirth!.month}/${dateOfBirth!.year}'
                     : '',
               ),
-              SizedBox(height: 10),
+              SizedBox(height:PhoneSize(context).adaptHeight(10)),
               _buildDisplayField('Gender', gender),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/ProfilePage');
                 },
-                child: Text("Update my information"),
+                child: Text("Update my information",style: TextStyle(color: Colors.white),),
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.yellow, padding: EdgeInsets.all(15.0)),
+                    backgroundColor: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
               ),
               SizedBox(
-                height: 10,
+                height: PhoneSize(context).adaptHeight(10),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -254,10 +285,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     ? CircularProgressIndicator()
                     : Text(
                         "Logout",
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: Colors.white),
                       ),
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.blueGrey, padding: EdgeInsets.all(15.0)),
+                    backgroundColor: Colors.red, padding: EdgeInsets.all(15.0)),
               ),
             ],
           ),

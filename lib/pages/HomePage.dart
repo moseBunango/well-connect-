@@ -5,6 +5,7 @@ import 'package:well_connect_app/components/PharmacyCard.dart';
 import 'package:well_connect_app/pages/PharmacyDetailsPage.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> pharmacyData = [];
+  List<Map<String, dynamic>>displayedPharmacies = [];
   Timer? _autoScrollTimer;
   final ScrollController _scrollController = ScrollController();
   double _itemWidth = 0.0;
@@ -94,6 +96,7 @@ class _HomePageState extends State<HomePage> {
       );
       return; // Exit the method
     }
+
     // Find the pharmacy in the data
     Map<String, dynamic>? searchedPharmacy = pharmacyData.firstWhere(
       (pharmacy) => pharmacy['name'].toLowerCase() == searchQuery.toLowerCase(),
@@ -118,6 +121,39 @@ class _HomePageState extends State<HomePage> {
       );
     }
   }
+  void filteredPharmacy(){
+  // Filter the pharmacies based on the search query
+  List<Map<String, dynamic>> filteredPharmacies = pharmacyData
+      .where((pharmacy) =>
+          pharmacy['name'].toString().toLowerCase().startsWith(searchQuery))
+      .toList();
+
+  if (searchQuery.isNotEmpty) { // Check if search query is not empty
+    if (filteredPharmacies.isNotEmpty) {
+      // Update the UI with the filtered pharmacies
+      setState(() {
+        // Assign the filteredPharmacies list to a new list to display below the search field
+        displayedPharmacies = filteredPharmacies;
+      });
+    } else {
+      // If no pharmacies found, clear the displayed list
+      setState(() {
+        displayedPharmacies = [];
+      });
+      // Show a message to indicate no pharmacies found
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No pharmacies found for "$searchQuery"'),
+        ),
+      );
+    }
+  } else {
+    // If search query is empty, clear the displayed list
+    setState(() {
+      displayedPharmacies = [];
+    });
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -125,42 +161,66 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, 
+              children: [
             Container(
-              color: Colors.yellow[100],
-              padding: EdgeInsets.all(20.0),
-              width: 500,
-              child: Column(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(6.0),
+                    bottomRight: Radius.circular(6.0),
+                  ),
+                  color: Color(0xff2b4260),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                padding: EdgeInsets.all(20.0),
+                width: double.infinity,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 100,
+                      height: PhoneSize(context).adaptHeight(50),
                     ),
                     Text(
                       "Welcome to",
                       style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.black),
+                        fontSize: PhoneSize(context).adaptFontSize(24),
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.teal,
+                      ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: PhoneSize(context).adaptHeight(10),
                     ),
                     Text(
                       "Well-Connect",
                       style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.black),
+                        fontSize: PhoneSize(context).adaptFontSize(30),
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.teal,
+                      ),
                     ),
-                  ]),
-            ),
+                  ],
+                ),
+              ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20.0)),
                 child: TextFormField(
+                  onChanged: (value) {
+                     setState(() {
+                      searchQuery = value.toLowerCase(); // Update searchQuery with the typed text
+                    });
+                    filteredPharmacy(); // Call filteredPharmacy() whenever text changes
+                  },
                   controller: searchController,
                   decoration: InputDecoration(
                     hintText: "Search NCD pharmacy",
@@ -179,21 +239,41 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            // Display filtered pharmacies
+            if (displayedPharmacies.isNotEmpty)
+              Column(
+                children: displayedPharmacies.map((pharmacy) {
+                  return ListTile(
+                    title: Text(pharmacy['name']),
+                    onTap: () {
+                      // Navigate to pharmacy details page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PharmacyDetailsPage(pharmacyData: pharmacy),
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+
             SizedBox(
-              height: 5,
+              height:PhoneSize(context).adaptHeight(5),
             ),
             Container(
               padding: EdgeInsets.all(20),
               child: Text(
                 "View Pharmacies",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(16), fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(
-              height: 5,
+              height: PhoneSize(context).adaptHeight(20),
             ),
             Container(
-              height: 250, // Adjust height as needed
+              height: PhoneSize(context).adaptHeight(250), // Adjust height as needed
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 controller: _scrollController,
@@ -204,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                     name: pharmacy['name'] ??
                         'Unknown', // Use 'Unknown' if name is null
                     image:
-                        pharmacy['image'] ?? 'lib/assets/landingImageTest.png',
+                        'http://10.0.2.2:8000/productimage/${pharmacy['image']}',
                     distance: pharmacy['distance'] != null
                         ? '${pharmacy['distance']} km'
                         : 'Distance unavailable',
@@ -220,17 +300,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: PhoneSize(context).adaptHeight(20),
             ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20)),
               child: Text(
                 "Health assesment",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(16), fontWeight: FontWeight.bold),
               ),
             ),
             Container(
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20.0)),
               child: TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/AssesmentFormPage');
@@ -240,11 +320,11 @@ class _HomePageState extends State<HomePage> {
                       "take NCD risk test",
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 14,
+                        fontSize: PhoneSize(context).adaptFontSize(14),
                       ),
                     ),
                     SizedBox(
-                      width: 20,
+                      width: PhoneSize(context).adaptHeight(20),
                     ),
                     Icon(Icons.arrow_forward_sharp)
                   ])),

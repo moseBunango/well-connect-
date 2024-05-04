@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'dart:convert';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -67,11 +68,10 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Color(0xff2b4260),
         centerTitle: true,
         title: Text(
-          'OrderHistory',
-          style: TextStyle(color: Colors.black),
+          'OrderHistory',style: TextStyle(color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -80,6 +80,10 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
+                cartHistoryItems.isEmpty
+                    ? Text(
+                        'You have no any orders History',
+                        style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(18),fontWeight: FontWeight.bold),):
                 // Your order form fields here
                 ListView.builder(
                   shrinkWrap: true,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-
+import 'dart:async';
 import 'package:well_connect_app/components/API/Api.dart';
+import 'package:well_connect_app/components/API/PhoneSize.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,43 +29,106 @@ class _LoginPageState extends State<LoginPage> {
       });
       return;
     }
+
     final data = {
       'email': emailController.text.toString(),
       'password': passwordController.text.toString()
     };
 
-    final result = await Api().postLoginData(route: '/auth/login', data: data);
-    final response = jsonDecode(result.body);
-    if (response['status']) {
-      // Login successful
-      print('User logged in successfully');
-
-      final token = response['token'];
-      // Assuming the token is in the response
-      await Api().storeAuthToken(token);
-      // Navigate to home page
-      Navigator.pushNamed(context, '/HomePage');
-      // Show registration success banner
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('User logged successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      // Login failed
-      print('Failed to login: ${response['error']}');
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Login failed: ${response['message']}'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-    setState(() {
-      _isLoggingin = false;
+    // Timer to handle timeout
+    var timer = Timer(Duration(seconds: 20), () {
+      setState(() {
+        _isLoggingin = false;
+        _showErrorPage(); // Call function to display error page
+      });
     });
+
+    try {
+      final result =
+          await Api().postLoginData(route: '/auth/login', data: data);
+      final response = jsonDecode(result.body);
+      timer.cancel(); // Cancel timer if successful response
+
+      if (response['status']) {
+        // Login successful
+        print('User logged in successfully');
+
+        final token = response['token'];
+        // Assuming the token is in the response
+        await Api().storeAuthToken(token);
+        // Navigate to home page
+        Navigator.pushNamed(context, '/HomePage');
+        // Show registration success banner
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User logged successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        // Login failed
+        print('Failed to login: ${response['error']}');
+        // Show error message
+        if (response['error'] != null) {
+  // If there are errors, generate error messages
+  String errorMessage = '';
+  int errorNumber = 1;
+  response['error'].forEach((field, errors) {
+    errors.forEach((error) {
+      errorMessage += '$errorNumber. $error\n';
+      errorNumber++;
+    });
+  });
+  // Display error messages in the SnackBar
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('login failed:\n$errorMessage'),
+      backgroundColor: Colors.red,
+    ),
+  );
+} else {
+  // If there are no errors, display the message from the response
+  String message = response['message'];
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('login failed:\n$message'),
+      backgroundColor: Colors.red,
+    ),
+  );
+}
+      }
+    } catch (e) {
+      // Handle any other errors
+      print('Error during login: $e');
+      timer.cancel();
+      setState(() {
+        _isLoggingin = false;
+        _showErrorPage(); // Call function to display error page
+      });
+    } finally {
+      setState(() {
+        _isLoggingin = false;
+      });
+    }
+  }
+
+  void _showErrorPage() {
+    // You can display a dialog or navigate to a separate error screen
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Login request timed out. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -79,32 +143,37 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ClipOval(
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
                     child: Image.asset(
-                      "lib/assets/loginImage.jpg",
-                      height: 250,
+                      "lib/assets/loginpageimage.png",
+                      height: PhoneSize(context).adaptHeight(250),
+                      fit: BoxFit.cover, // Adjust image scaling
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: PhoneSize(context).adaptHeight(20),
                   ),
                   Text(
                     "Sign in",
                     style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+                      fontSize: PhoneSize(context).adaptFontSize(30),
+                      fontWeight: FontWeight.bold, // Attractive color
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: PhoneSize(context).adaptHeight(20),
                   ),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'yourEmail@domain.com',
                       filled: true,
+                      fillColor: Colors.grey[200], // Subtle background
                       border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(10.0), // Rounded corners
                         borderSide: BorderSide(
-                          color: Colors.black,
+                          color: Colors.teal, // Consistent color
                         ),
                       ),
                     ),
@@ -117,15 +186,18 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   SizedBox(
-                    height: 10,
+                    height: PhoneSize(context).adaptHeight(10),
                   ),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Enter your password',
                       filled: true,
+                      fillColor: Colors.grey[200], // Subtle background
                       border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(10.0), // Rounded corners
                         borderSide: BorderSide(
-                          color: Colors.black,
+                          color: Colors.teal, // Consistent color
                         ),
                       ),
                       suffixIcon: IconButton(
@@ -134,9 +206,12 @@ class _LoginPageState extends State<LoginPage> {
                             _obscurePassword = !_obscurePassword;
                           });
                         },
-                        icon: Icon(_obscurePassword
-                            ? Icons.visibility
-                            : Icons.visibility_off),
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.teal, // Consistent color
+                        ),
                       ),
                     ),
                     controller: passwordController,
@@ -148,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: PhoneSize(context).adaptHeight(30)),
                   ElevatedButton(
                     onPressed: () {
                       loginUser();
@@ -156,56 +231,111 @@ class _LoginPageState extends State<LoginPage> {
                     child: _isLoggingin
                         ? CircularProgressIndicator()
                         : Text(
-                            "Login",
-                            style: TextStyle(color: Colors.black),
+                            "Login",style: TextStyle(color: Colors.white)
                           ),
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.yellow, padding: EdgeInsets.all(15.0)),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Color(0xff2b4260)),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.all(PhoneSize(context).adaptHeight(15.0)),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              PhoneSize(context).adaptHeight(10)),
+                        ),
+                      ),
+                      overlayColor:
+                          MaterialStateProperty.all<Color>(Colors.teal),
+                    ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: PhoneSize(context).adaptHeight(20)),
                   Text(
                     "OR",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: PhoneSize(context).adaptHeight(16),
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: PhoneSize(context).adaptHeight(10),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
                         onPressed: () {},
-                        child: Text("Login with google"),
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.blueGrey,
-                            padding: EdgeInsets.all(15.0)),
+                        child: Text("Login with Google",style: TextStyle(color: Colors.white)),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xff2b4260)),
+                          padding:
+                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            EdgeInsets.all(
+                                PhoneSize(context).adaptHeight(15.0)),
+                          ),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  PhoneSize(context).adaptHeight(10)),
+                            ),
+                          ),
+                          overlayColor:
+                              MaterialStateProperty.all<Color>(Colors.teal),
+                        ),
                       ),
                       SizedBox(
-                        width: 50,
+                        width: PhoneSize(context).adaptHeight(60),
                       ),
                       ElevatedButton(
                         onPressed: () {},
-                        child: Text("Login with Facebook"),
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.blueGrey,
-                            padding: EdgeInsets.all(15.0)),
+                        child: Text("Login with Facebook",style: TextStyle(color: Colors.white)),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xff2b4260)),
+                          padding:
+                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            EdgeInsets.all(
+                                PhoneSize(context).adaptHeight(15.0)),
+                          ),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  PhoneSize(context).adaptHeight(10)),
+                            ),
+                          ),
+                          overlayColor:
+                              MaterialStateProperty.all<Color>(Colors.teal),
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: 20,
+                    height: PhoneSize(context).adaptHeight(30),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/Register');
                     },
-                    child: Text("Create an account"),
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.blueGrey,
-                        padding: EdgeInsets.all(15.0)),
+                    child: Text("Create an account",style: TextStyle(color: Colors.white)),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Color(0xff2b4260)),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.all(PhoneSize(context).adaptHeight(15.0)),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              PhoneSize(context).adaptHeight(10)),
+                        ),
+                      ),
+                      overlayColor:
+                          MaterialStateProperty.all<Color>(Colors.teal),
+                    ),
                   ),
                 ],
               ),
