@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'dart:convert';
+import 'dart:async';
+
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -20,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isRegistering = false;
   final _formKey = GlobalKey<FormState>();
 
-  Future<void> registerUser() async {
+   Future<void> registerUser() async {
     if (!_formKey.currentState!.validate()) {
       // Form is not valid, do not proceed with registration
       return;
@@ -28,44 +30,96 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       _isRegistering = true;
     });
+
     final data = {
       'email': emailController.text.toString(),
       'name': nameController.text.toString(),
       'password': passwordController.text.toString(),
       'password_confirmation': passwordConfirmationController.text.toString()
     };
-    final result =
-        await Api().postRegisterData(route: '/auth/register', data: data);
-    final response = jsonDecode(result.body);
-    if (response['status']) {
-      final token = response['token'];
-      await Api().storeAuthToken(token);
-      // Registration successful
-      print('User registered successfully');
-      // Navigate to home page
-      Navigator.pushNamed(context, '/HomePage');
-      // Show registration success banner
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('User registered successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      // Registration failed
-      print('Failed to register: ${response['message']}');
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Registration failed: ${response['error']}'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-    setState(() {
-      _isRegistering = false;
+
+    // Timer to handle timeout
+    var timer = Timer(Duration(seconds: 20), () {
+      setState(() {
+        _isRegistering = false;
+        _showErrorPage(); // Call function to display error page
+      });
     });
+
+    try {
+      final result =
+          await Api().postRegisterData(route: '/auth/register', data: data);
+      final response = jsonDecode(result.body);
+      timer.cancel(); // Cancel timer if successful response
+
+      if (response['status']) {
+        final token = response['token'];
+        await Api().storeAuthToken(token);
+        // Registration successful
+        print('User registered successfully');
+        // Navigate to home page
+        Navigator.pushNamed(context, '/HomePage');
+        // Show registration success banner
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User registered successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        // Registration failed
+        print('Failed to register: ${response['error']}');
+        // Show error message
+        String errorMessage = '';
+        int errorNumber = 1;
+        response['error'].forEach((field, errors) {
+        errors.forEach((error) {
+        errorMessage += '$errorNumber. $error \n';
+        errorNumber++;
+  });
+});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registration failed:\n $errorMessage'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle any other errors
+      print('Error during registration: $e');
+      timer.cancel();
+      setState(() {
+        _isRegistering = false;
+        _showErrorPage(); // Call function to display error page
+      });
+    } finally {
+      setState(() {
+        _isRegistering = false;
+      });
+    }
   }
+
+  void _showErrorPage() {
+    // Replace this with your actual error page logic
+    // You can display a dialog or navigate to a separate error screen
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Registration request timed out. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +280,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: _isRegistering
                         ? CircularProgressIndicator()
                         : Text(
-                            "Register",
+                            "Register",style: TextStyle(color: Colors.white)
                           ),
                     style: ButtonStyle(
                       backgroundColor:

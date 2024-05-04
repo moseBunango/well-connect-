@@ -3,6 +3,7 @@ import 'package:well_connect_app/components/API/Api.dart';
 import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'dart:convert';
+import 'dart:async';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -54,8 +55,17 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
       _isLoggingout = true;
     });
 
+    // Timer to handle timeout
+    var timer = Timer(Duration(seconds: 20), () {
+      setState(() {
+        _isLoggingout = false;
+        _showErrorPage(); // Call function to display error page
+      });
+    });
+
     final result = await Api().logoutData(route: '/auth/logout');
     final response = jsonDecode(result.body);
+    timer.cancel();
 
     print(response['status']);
 
@@ -116,6 +126,27 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     }
   }
 
+  void _showErrorPage() {
+    // Replace this with your actual error page logic
+    // You can display a dialog or navigate to a separate error screen
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('request timed out. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   Future<void> _showDeleteConfirmationDialog() async {
     return showDialog(
       context: context,
@@ -173,7 +204,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Profile Details',
+          'Profile Details',style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xff2b4260),
         centerTitle: true,
@@ -239,9 +270,9 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                 onPressed: () {
                   Navigator.pushNamed(context, '/ProfilePage');
                 },
-                child: Text("Update my information"),
+                child: Text("Update my information",style: TextStyle(color: Colors.white),),
                 style: ElevatedButton.styleFrom(
-                    primary: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
+                    backgroundColor: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
               ),
               SizedBox(
                 height: PhoneSize(context).adaptHeight(10),
@@ -257,7 +288,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         style: TextStyle(color: Colors.white),
                       ),
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.red, padding: EdgeInsets.all(15.0)),
+                    backgroundColor: Colors.red, padding: EdgeInsets.all(15.0)),
               ),
             ],
           ),

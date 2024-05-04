@@ -15,7 +15,7 @@ class PharmacyDetailsPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color(0xff2b4260),
         title:
-            Text(pharmacyData['name']),
+            Text(pharmacyData['name'],style: TextStyle(color: Colors.white),),
       ),
       body: SingleChildScrollView(
         // Allow scrolling if content overflows

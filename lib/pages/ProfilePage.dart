@@ -67,14 +67,22 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     } else {
       // Registration failed
-      print('Failed to register: ${response['message']}');
+      print('Failed to update: ${response['message']}');
       // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('update failed: ${response['error']}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+        String errorMessage = '';
+        int errorNumber = 1;
+        response['error'].forEach((field, errors) {
+        errors.forEach((error) {
+        errorMessage += '$errorNumber. $error \n';
+        errorNumber++;
+  });
+});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('update failed:\n $errorMessage'),
+            backgroundColor: Colors.red,
+          ),
+        );
     }
   }
 
@@ -85,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         backgroundColor:Color(0xff2b4260),
         title: Text(
-          'Profile update',
+          'Profile update',style: TextStyle(color: Colors.white),
         ),
       ),
       body: Padding(
@@ -252,9 +260,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   _updateProfile();
                 },
-                child: Text("Update profile"),
+                child: Text("Update profile",style: TextStyle(color: Colors.white),),
                 style: ElevatedButton.styleFrom(
-                    primary: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
+                    backgroundColor: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
+import 'dart:async';
 
 class AsssesmentForm extends StatefulWidget {
   const AsssesmentForm({super.key});
@@ -17,8 +18,13 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
   TextEditingController heightController = TextEditingController();
   TextEditingController bloodPressureController = TextEditingController();
   TextEditingController bloodSugarController = TextEditingController();
+  bool _isLoggingin = false;
 
   Future<void> riskAssesment() async {
+
+    setState(() {
+      _isLoggingin = true;
+    });
     final data = {
       'age': ageController.text.toString(),
       'weight': weightController.text.toString(),
@@ -26,9 +32,18 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
       'pressure': bloodPressureController.text.toString(),
       'sugar': bloodSugarController.text.toString(),
     };
+
+    var timer = Timer(Duration(seconds: 20), () {
+      setState(() {
+        _isLoggingin = false;
+        _showErrorPage(); // Call function to display error page
+      });
+    });
+
     final result =
         await Api().riskAssesment(route: '/riskAssesment', data: data);
     final response = jsonDecode(result.body);
+    timer.cancel();
     if (response['status']) {
       // Registration successful
       print('data sent succesfully');
@@ -45,13 +60,43 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
       // Registration failed
       print('Failed to send: ${response['message']}');
       // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('failed to send: ${response['error']}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+        String errorMessage = '';
+        int errorNumber = 1;
+        response['error'].forEach((field, errors) {
+        errors.forEach((error) {
+        errorMessage += '$errorNumber. $error \n';
+        errorNumber++;
+  });
+});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Assesment failed:\n $errorMessage'),
+            backgroundColor: Colors.red,
+          ),
+        );
     }
+    setState(() {
+        _isLoggingin = false;
+      });
+  }
+
+  void _showErrorPage() {
+    // You can display a dialog or navigate to a separate error screen
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('request timed out. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -228,9 +273,14 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     onPressed: () {
                       riskAssesment();
                     },
-                    child: Text("perform NCD Evaluation"),
+                    child:  _isLoggingin
+                        ? CircularProgressIndicator()
+                        : Text(
+                            "perform Risk Assesment",style: TextStyle(color: Colors.white),
+                          ),
                     style: ElevatedButton.styleFrom(
-                        primary: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
+                        backgroundColor: Color(0xff2b4260)
+                        , minimumSize: Size(double.infinity, 50.0),),
                   ),
                 ],
               ),

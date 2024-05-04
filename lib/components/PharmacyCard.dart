@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PharmacyCard extends StatelessWidget {
+class PharmacyCard extends StatefulWidget {
   final String name;
   final String distance;
   final String image;
@@ -14,11 +14,27 @@ class PharmacyCard extends StatelessWidget {
       required this.onTap});
 
   @override
+  State<PharmacyCard> createState() => _PharmacyCardState();
+}
+
+class _PharmacyCardState extends State<PharmacyCard> {
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () async {
+          setState(() {
+            _isLoading = true; // Show loader when card is tapped
+          });
+          await Future.delayed(Duration(seconds: 2)); // Simulate loading for 2 seconds
+          widget.onTap();
+          setState(() {
+            _isLoading = false; // Hide loader after loading is complete
+          });
+        },
         child:  Card(
           elevation: 4,
           shape: RoundedRectangleBorder(
@@ -35,7 +51,7 @@ class PharmacyCard extends StatelessWidget {
                     topRight: Radius.circular(24.0),
                   ),
                   child: Image.network(
-                    image,
+                    widget.image,
                     width: double.infinity,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -48,6 +64,10 @@ class PharmacyCard extends StatelessWidget {
                     },
                   ),
                 ),
+                if (_isLoading)
+                  Center(
+                    child: CircularProgressIndicator(), // Show loader
+                  ),
               Positioned(
                   bottom: 12.0,
                   left: 12.0,
@@ -56,7 +76,7 @@ class PharmacyCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        widget.name,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -65,7 +85,7 @@ class PharmacyCard extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Distance: $distance',
+                        'Distance: ${widget.distance}',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.black,

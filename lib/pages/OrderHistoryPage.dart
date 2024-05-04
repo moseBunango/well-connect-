@@ -71,7 +71,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
         backgroundColor: Color(0xff2b4260),
         centerTitle: true,
         title: Text(
-          'OrderHistory',
+          'OrderHistory',style: TextStyle(color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(

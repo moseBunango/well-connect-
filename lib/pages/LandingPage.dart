@@ -60,11 +60,12 @@ class _LandingPageState extends State<LandingPage> {
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                         fontSize: PhoneSize(context).adaptFontSize(18),
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xff2b4260),
+                     backgroundColor: Color(0xff2b4260),
                       padding: EdgeInsets.symmetric(vertical: 15.0),
                       minimumSize: Size(
                         MediaQuery.of(context).size.width * 0.7,

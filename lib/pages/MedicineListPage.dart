@@ -15,7 +15,7 @@ class MedicineListsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff2b4260),
-        title: Text(medicineData['medicine_name'],),
+        title: Text(medicineData['medicine_name'],style: TextStyle(color: Colors.white),),
       ),
       body: SingleChildScrollView(
         // Allow scrolling if content overflows

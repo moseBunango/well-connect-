@@ -127,7 +127,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Search',
+          'Search',style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xff2b4260),
         centerTitle: true,
