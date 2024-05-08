@@ -192,8 +192,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         fontSize: PhoneSize(context).adaptFontSize(24),
                         fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.teal,
+                        color: Colors.white,
                       ),
                     ),
                     SizedBox(
@@ -204,8 +203,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         fontSize: PhoneSize(context).adaptFontSize(30),
                         fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.teal,
+                        color: Colors.white,
                       ),
                     ),
                   ],
