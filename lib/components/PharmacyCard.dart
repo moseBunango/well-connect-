@@ -58,7 +58,7 @@ class _PharmacyCardState extends State<PharmacyCard> {
                     errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                       return Container(
                         child: Center(
-                          child: Image.asset("lib/assets/pharmacyimage.png")
+                          child: Image.asset("lib/assets/pharmacy.jpg")
                         ),
                       );
                     },
