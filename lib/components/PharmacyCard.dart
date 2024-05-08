@@ -68,6 +68,18 @@ class _PharmacyCardState extends State<PharmacyCard> {
                   Center(
                     child: CircularProgressIndicator(), // Show loader
                   ),
+                  Positioned.fill(
+        bottom: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+            ),
+          ),
+        ),
+      ),
               Positioned(
                   bottom: 12.0,
                   left: 12.0,
@@ -80,7 +92,7 @@ class _PharmacyCardState extends State<PharmacyCard> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -88,7 +100,7 @@ class _PharmacyCardState extends State<PharmacyCard> {
                         'Distance: ${widget.distance}',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                     ],
