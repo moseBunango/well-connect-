@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:well_connect_app/components/API/PhoneSize.dart';
+import 'package:well_connect_app/pages/Maps.dart';
 class PharmacyDetailsPage extends StatelessWidget {
   final Map<String, dynamic> pharmacyData;
 
@@ -33,19 +35,19 @@ class PharmacyDetailsPage extends StatelessWidget {
                     color: Color(0xff2b4260),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         children:[ 
-                          Text(
-                          "Name: ${pharmacyData['name']}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: PhoneSize(context).adaptFontSize(18),
-                            color: Colors.white,
-                          ),
-                        ), 
+                             Text(
+                            "Name: ${pharmacyData['name']}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: PhoneSize(context).adaptFontSize(18),
+                              color: Colors.white,
+                            ),
+                            ),
                       SizedBox(height: PhoneSize(context).adaptHeight(10)),
                       Text(
                         'Distance: ${pharmacyData['distance']}',
@@ -53,10 +55,21 @@ class PharmacyDetailsPage extends StatelessWidget {
                           color: Colors.white,fontSize:PhoneSize(context).adaptFontSize(18)
                         ),
                       ),
+                      TextButton(onPressed: () {
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>Maps(pharmacyLocation: pharmacyData['location']) ),
+                          );
+                        },
+                        child:Text('Click to view in Map',style:TextStyle
+                        (color:Colors.white,
+                        fontSize: 18,
+                        ),),)
                       ]),
                       SizedBox(width: PhoneSize(context).adaptHeight(30)),
                       Column(
-                        children:[ Text(
+                        children:[
+                           Text(
                           "Location: ${pharmacyData['location']}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -64,7 +77,6 @@ class PharmacyDetailsPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                        Text("")
                     ]),
                     ],
                   ),
