@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                     name: pharmacy['name'] ??
                         'Unknown', // Use 'Unknown' if name is null
                     image:
-                        'http://10.0.2.2:8000/productimage/${pharmacy['image']}',
+                        'http://192.168.76.60:8000/productimage/${pharmacy['image']}',
                     distance: pharmacy['distance'] != null
                         ? '${pharmacy['distance']} km'
                         : 'Distance unavailable',

@@ -106,6 +106,7 @@ class _OrderPageState extends State<OrderPage> {
         imagePath: fileFullPath,
       );
       final response = json.decode(result.body);
+      print(response['status']);
 
       if (response['status']) {
         print("success");

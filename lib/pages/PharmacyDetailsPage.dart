@@ -110,7 +110,7 @@ class PharmacyDetailsPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       columns: const [
-        DataColumn(label: Text('No',style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(label: Text('Image', style: TextStyle(fontWeight: FontWeight.bold))),
         DataColumn(
             label: Text('Medicine Name',
                 style: TextStyle(fontWeight: FontWeight.bold))),
@@ -130,10 +130,16 @@ class PharmacyDetailsPage extends StatelessWidget {
   // Function to create a DataRow for each medicine
   DataRow _medicineDataRow(
       Map<String, dynamic> medicine, BuildContext context) {
-        int counter = 1;
     return DataRow(
       cells: [
-        DataCell(Text('${counter++}')),
+        DataCell(ClipOval(
+          child: Image.asset(
+            "lib/assets/bpmeds.png", // Placeholder if no image URL
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+        )),
         DataCell(GestureDetector(
             onTap: () {
               _showConfirmationDialog(context, medicine);

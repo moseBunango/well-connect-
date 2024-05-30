@@ -82,7 +82,7 @@ class _MapsState extends State<Maps> {
   if (placeName == null) {
     // If pharmacy location not provided, set default destination
     setState(() {
-      destination = LatLng(39.504400, -122.578467);
+      destination = LatLng(-6.77284, 39.23438);
       isLoading = false; // Clear loading indicator
     });
     if (currentLocation != null) {
@@ -111,7 +111,7 @@ class _MapsState extends State<Maps> {
     } else {
       // If the place is not found, set default destination
       setState(() {
-        destination = LatLng(39.504400, -122.578467);
+        destination = LatLng(-6.77284, 39.23438);
       });
     }
     if (currentLocation != null) {
