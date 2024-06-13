@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchPharmacies() async {
     // Call your API to fetch pharmacies
     try {
-      final result = await Api().getPharmacyData(route: '/getPharmacy');
+      final result = await Api().getPharmacyData(route:'/getPharmacy');
       final response = json.decode(result.body);
 
       if (response['status']) {
@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                     name: pharmacy['name'] ??
                         'Unknown', // Use 'Unknown' if name is null
                     image:
-                        'http://192.168.76.60:8000/productimage/${pharmacy['image']}',
+                        'http://192.168.18.60:8000/productimage/${pharmacy['image']}',
                     distance: pharmacy['distance'] != null
                         ? '${pharmacy['distance']} km'
                         : 'Distance unavailable',

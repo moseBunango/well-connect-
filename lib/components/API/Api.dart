@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
-  final String apiUrl = 'http://192.168.76.60:8000/api';
+  final String apiUrl = 'http://192.168.18.60:8000/api';
 
   Future<void> storeAuthToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -189,7 +189,28 @@ class Api {
     return await http.post(Uri.parse(fullUrl),
      headers: headers);
   }
+  Future<http.Response> postToChatgpt({required String route})
+  async {
+    final token = await retrieveAuthToken();
+    final headers = _header();
+    if (token != null) {
+      headers.addAll({'Authorization': 'Bearer $token'});
+    }
+    String fullUrl = apiUrl + route;
+    return await http.post(Uri.parse(fullUrl),
+     headers: headers);
+  }
+  Future<http.Response> getChatgptData({required String route}) async {
+    final token = await retrieveAuthToken();
+    final headers = _header();
+    if (token != null) {
+      headers.addAll({'Authorization': 'Bearer $token'});
+    }
+    String fullUrl = apiUrl + route;
+    return await http.get(Uri.parse(fullUrl), headers: headers);
+  }
 
   _header() =>
       {'Content-type': 'application/json', 'Accept': 'application/json'};
 }
+

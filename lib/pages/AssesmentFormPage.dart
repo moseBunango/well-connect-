@@ -5,6 +5,8 @@ import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:well_connect_app/pages/AssesmentResults.dart';
+
 class AsssesmentForm extends StatefulWidget {
   const AsssesmentForm({super.key});
 
@@ -47,8 +49,6 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
     if (response['status']) {
       // Registration successful
       print('data sent succesfully');
-      // Navigate to home page
-      Navigator.pushNamed(context, '/HomePage');
       // Show registration success banner
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -56,6 +56,41 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
           backgroundColor: Colors.green,
         ),
       );
+      print("Hey");
+     // Trigger ChatGPT route
+      final chatGptResult = await Api().postToChatgpt(route:'/chatgpt/ask');
+      print('ChatGPT Result: ${chatGptResult.body}');
+      final chatGptResponse = jsonDecode(chatGptResult.body);
+
+      if (chatGptResponse is List && chatGptResponse.isNotEmpty) {
+        // Process ChatGPT response
+        final chatGptMessage = chatGptResponse[0];
+        print('ChatGPT Message: $chatGptMessage');
+
+        // Fetch risk results
+        final riskResultsResult = await Api().getChatgptData(route: '/getRiskResults');
+        print('Risk Results: ${riskResultsResult.body}');
+        final riskResultsResponse = jsonDecode(riskResultsResult.body);
+
+        if (riskResultsResponse['status']) {
+         // Ensure the data is a map and not a list
+          if (riskResultsResponse['data'] is List) {
+            final riskResults = riskResultsResponse['data'][0] as Map<String, dynamic>;
+            final responseMessage = riskResults['response'];
+            // Navigate to a new page to display results
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Assesmentresults(results:{'response': responseMessage})),
+            );
+          } else {
+            throw Exception('Unexpected data format');
+          }
+        } else {
+          throw Exception('Failed to fetch risk results');
+        }
+      } else {
+        throw Exception('Unexpected ChatGPT response format');
+      }
     } else {
       // Registration failed
       print('Failed to send: ${response['message']}');
