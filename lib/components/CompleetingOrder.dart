@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:well_connect_app/pages/ThankYouPage.dart';
 
 
 class CompleetingOrder extends StatefulWidget {
@@ -117,6 +118,11 @@ class _CompleetingOrderState extends State<CompleetingOrder> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
+        await moveCartsToOrderHistory();
+         Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>Thankyoupage()),
+          );
       } else {
         throw Exception(response['message'] ?? 'Failed to place order');
       }

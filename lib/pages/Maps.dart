@@ -17,7 +17,7 @@ class _MapsState extends State<Maps> {
   LatLng? currentLocation;
   LatLng? destination;
   bool isLoading = false;
-  final double zoom = 5.0; // Initial zoom level
+  final double zoom = 15.0; // Initial zoom level
   List<LatLng> routePoints = [];
   double? distanceInMeters;
 

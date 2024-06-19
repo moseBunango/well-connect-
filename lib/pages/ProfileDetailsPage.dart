@@ -199,102 +199,126 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     );
   }
 
+  Future<bool> _onWillPop() async {
+  bool shouldLogout = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Confirm Exit'),
+      content: Text('Do you really want to exit?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text('No'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text('Yes'),
+        ),
+      ],
+    ),
+  );
+  return shouldLogout ;
+}
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Profile Details',style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Color(0xff2b4260),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.delete,
-              color: Colors.teal,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Profile Details',style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Color(0xff2b4260),
+          centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.delete,
+                color: Colors.teal,
+              ),
+              onPressed: () {
+                _showDeleteConfirmationDialog();
+              },
             ),
-            onPressed: () {
-              _showDeleteConfirmationDialog();
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                "Contact information",
-                style: TextStyle(
-                  fontSize: PhoneSize(context).adaptFontSize(24),
-                  fontWeight: FontWeight.bold,
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  "Contact information",
+                  style: TextStyle(
+                    fontSize: PhoneSize(context).adaptFontSize(24),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField('Email', email),
-              SizedBox(height: 10),
-              _buildDisplayField('User name', username),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              Text(
-                "User's Address",
-                style: TextStyle(
-                  fontSize: PhoneSize(context).adaptFontSize(24),
-                  fontWeight: FontWeight.bold,
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField('Email', email),
+                SizedBox(height: 10),
+                _buildDisplayField('User name', username),
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                Text(
+                  "User's Address",
+                  style: TextStyle(
+                    fontSize: PhoneSize(context).adaptFontSize(24),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField('First name', firstName),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField('Last name', lastName),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField('Street', street),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField('City', city),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField('Country', country),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField('Phone number', phoneNumber),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField(
-                'Date of Birth',
-                dateOfBirth != null
-                    ? '${dateOfBirth!.day}/${dateOfBirth!.month}/${dateOfBirth!.year}'
-                    : '',
-              ),
-              SizedBox(height:PhoneSize(context).adaptHeight(10)),
-              _buildDisplayField('Gender', gender),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/ProfilePage');
-                },
-                child: Text("Update my information",style: TextStyle(color: Colors.white),),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
-              ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(10),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _showLogoutConfirmationDialog();
-                },
-                child: _isLoggingout
-                    ? CircularProgressIndicator()
-                    : Text(
-                        "Logout",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red, padding: EdgeInsets.all(15.0)),
-              ),
-            ],
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField('First name', firstName),
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField('Last name', lastName),
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField('Street', street),
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField('City', city),
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField('Country', country),
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField('Phone number', phoneNumber),
+                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField(
+                  'Date of Birth',
+                  dateOfBirth != null
+                      ? '${dateOfBirth!.day}/${dateOfBirth!.month}/${dateOfBirth!.year}'
+                      : '',
+                ),
+                SizedBox(height:PhoneSize(context).adaptHeight(10)),
+                _buildDisplayField('Gender', gender),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/ProfilePage');
+                  },
+                  child: Text("Update my information",style: TextStyle(color: Colors.white),),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
+                ),
+                SizedBox(
+                  height: PhoneSize(context).adaptHeight(10),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _showLogoutConfirmationDialog();
+                  },
+                  child: _isLoggingout
+                      ? CircularProgressIndicator()
+                      : Text(
+                          "Logout",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red, padding: EdgeInsets.all(15.0)),
+                ),
+              ],
+            ),
           ),
         ),
+        bottomNavigationBar: BottomNavigation(),
       ),
-      bottomNavigationBar: BottomNavigation(),
     );
   }
 

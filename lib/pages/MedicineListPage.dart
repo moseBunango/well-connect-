@@ -4,18 +4,44 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:well_connect_app/components/API/PhoneSize.dart';
 
-class MedicineListsPage extends StatelessWidget {
+class MedicineListsPage extends StatefulWidget {
   final Map<String, dynamic> medicineData;
 
   const MedicineListsPage({Key? key, required this.medicineData})
       : super(key: key);
 
   @override
+  State<MedicineListsPage> createState() => _MedicineListsPageState();
+}
+
+class _MedicineListsPageState extends State<MedicineListsPage> {
+  Future<bool> _onWillPop() async {
+  bool shouldLogout = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Confirm Exit'),
+      content: Text('Do you really want to exit?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text('No'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text('Yes'),
+        ),
+      ],
+    ),
+  );
+  return shouldLogout ;
+}
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff2b4260),
-        title: Text(medicineData['medicine_name'],style: TextStyle(color: Colors.white),),
+        title: Text(widget.medicineData['medicine_name'],style: TextStyle(color: Colors.white),),
       ),
       body: SingleChildScrollView(
         // Allow scrolling if content overflows
@@ -39,7 +65,7 @@ class MedicineListsPage extends StatelessWidget {
                       Column(
                         children:[ 
                           Text(
-                          "Name: ${medicineData['medicine_name']}",
+                          "Name: ${widget.medicineData['medicine_name']}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: PhoneSize(context).adaptFontSize(18),
@@ -48,7 +74,7 @@ class MedicineListsPage extends StatelessWidget {
                         ), 
                       SizedBox(height: PhoneSize(context).adaptHeight(10)),
                       Text(
-                        "Price: TZS${medicineData['price']}/=",
+                        "Price: TZS${widget.medicineData['price']}/=",
                         style: TextStyle(
                           color: Colors.white,fontSize: PhoneSize(context).adaptFontSize(18)
                         ),
@@ -56,7 +82,7 @@ class MedicineListsPage extends StatelessWidget {
                       ]),
                       Column(
                         children:[ Text(
-                          "Category: ${medicineData['category']}",
+                          "Category: ${widget.medicineData['category']}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,fontSize: PhoneSize(context).adaptFontSize(18)
@@ -78,7 +104,7 @@ class MedicineListsPage extends StatelessWidget {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: _buildMedicineTable(
-                    [medicineData], context), // Call medicine table builder
+                    [widget.medicineData], context), // Call medicine table builder
               ), // Call medicine table builder
             ],
           ),

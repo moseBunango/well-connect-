@@ -155,182 +155,206 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+Future<bool> _onWillPop() async {
+  bool shouldLogout = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Confirm Exit'),
+      content: Text('Do you really want to exit?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text('No'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text('Yes'),
+        ),
+      ],
+    ),
+  );
+  return shouldLogout ;
+}
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, 
-              children: [
-            Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(6.0),
-                    bottomRight: Radius.circular(6.0),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, 
+                children: [
+              Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(6.0),
+                      bottomRight: Radius.circular(6.0),
+                    ),
+                    color: Color(0xff2b4260),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 6,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                   ),
-                  color: Color(0xff2b4260),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 6,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
+                  padding: EdgeInsets.all(20.0),
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: PhoneSize(context).adaptHeight(50),
+                      ),
+                      Text(
+                        "Welcome to",
+                        style: TextStyle(
+                          fontSize: PhoneSize(context).adaptFontSize(24),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        height: PhoneSize(context).adaptHeight(10),
+                      ),
+                      Text(
+                        "Well-Connect",
+                        style: TextStyle(
+                          fontSize: PhoneSize(context).adaptFontSize(30),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                padding: EdgeInsets.all(20.0),
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: PhoneSize(context).adaptHeight(50),
-                    ),
-                    Text(
-                      "Welcome to",
-                      style: TextStyle(
-                        fontSize: PhoneSize(context).adaptFontSize(24),
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20.0)),
+                  child: TextFormField(
+                    onChanged: (value) {
+                       setState(() {
+                        searchQuery = value.toLowerCase(); // Update searchQuery with the typed text
+                      });
+                      filteredPharmacy(); // Call filteredPharmacy() whenever text changes
+                    },
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: "Search NCD pharmacy",
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          searchPharmacy();
+                        },
+                        icon: Icon(Icons.search),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      height: PhoneSize(context).adaptHeight(10),
-                    ),
-                    Text(
-                      "Well-Connect",
-                      style: TextStyle(
-                        fontSize: PhoneSize(context).adaptFontSize(30),
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20.0)),
-                child: TextFormField(
-                  onChanged: (value) {
-                     setState(() {
-                      searchQuery = value.toLowerCase(); // Update searchQuery with the typed text
-                    });
-                    filteredPharmacy(); // Call filteredPharmacy() whenever text changes
-                  },
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    hintText: "Search NCD pharmacy",
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        searchPharmacy();
+              // Display filtered pharmacies
+              if (displayedPharmacies.isNotEmpty)
+                Column(
+                  children: displayedPharmacies.map((pharmacy) {
+                    return ListTile(
+                      title: Text(pharmacy['name']),
+                      onTap: () {
+                        // Navigate to pharmacy details page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PharmacyDetailsPage(pharmacyData: pharmacy),
+                          ),
+                        );
                       },
-                      icon: Icon(Icons.search),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+                    );
+                  }).toList(),
+                ),
+      
+              SizedBox(
+                height:PhoneSize(context).adaptHeight(5),
+              ),
+              Container(
+                padding: EdgeInsets.all(20),
+                child: Text(
+                  "View Pharmacies",
+                  style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(16), fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-            // Display filtered pharmacies
-            if (displayedPharmacies.isNotEmpty)
-              Column(
-                children: displayedPharmacies.map((pharmacy) {
-                  return ListTile(
-                    title: Text(pharmacy['name']),
-                    onTap: () {
-                      // Navigate to pharmacy details page
-                      Navigator.push(
+              SizedBox(
+                height: PhoneSize(context).adaptHeight(20),
+              ),
+              Container(
+                height: PhoneSize(context).adaptHeight(250), // Adjust height as needed
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  controller: _scrollController,
+                  itemCount: pharmacyData.length,
+                  itemBuilder: (context, index) {
+                    final pharmacy = pharmacyData[index];
+                    return PharmacyCard(
+                      name: pharmacy['name'] ??
+                          'Unknown', // Use 'Unknown' if name is null
+                      image:
+                          'http://192.168.137.1:8000/productimage/${pharmacy['image']}',
+                      distance: pharmacy['distance'] != null
+                          ? '${pharmacy['distance']} km'
+                          : 'Distance unavailable',
+                      onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
                               PharmacyDetailsPage(pharmacyData: pharmacy),
                         ),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
-
-            SizedBox(
-              height:PhoneSize(context).adaptHeight(5),
-            ),
-            Container(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                "View Pharmacies",
-                style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(16), fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: PhoneSize(context).adaptHeight(20),
-            ),
-            Container(
-              height: PhoneSize(context).adaptHeight(250), // Adjust height as needed
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: _scrollController,
-                itemCount: pharmacyData.length,
-                itemBuilder: (context, index) {
-                  final pharmacy = pharmacyData[index];
-                  return PharmacyCard(
-                    name: pharmacy['name'] ??
-                        'Unknown', // Use 'Unknown' if name is null
-                    image:
-                        'http://192.168.18.60:8000/productimage/${pharmacy['image']}',
-                    distance: pharmacy['distance'] != null
-                        ? '${pharmacy['distance']} km'
-                        : 'Distance unavailable',
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PharmacyDetailsPage(pharmacyData: pharmacy),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(
-              height: PhoneSize(context).adaptHeight(20),
-            ),
-            Container(
-              padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20)),
-              child: Text(
-                "Health assesment",
-                style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(16), fontWeight: FontWeight.bold),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20.0)),
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/AssesmentFormPage');
+                    );
                   },
-                  child: Row(children: [
-                    Text(
-                      "take NCD risk test",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: PhoneSize(context).adaptFontSize(14),
+                ),
+              ),
+              SizedBox(
+                height: PhoneSize(context).adaptHeight(20),
+              ),
+              Container(
+                padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20)),
+                child: Text(
+                  "Health assesment",
+                  style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(16), fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20.0)),
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/AssesmentFormPage');
+                    },
+                    child: Row(children: [
+                      Text(
+                        "take NCD risk test",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: PhoneSize(context).adaptFontSize(14),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: PhoneSize(context).adaptHeight(20),
-                    ),
-                    Icon(Icons.arrow_forward_sharp)
-                  ])),
-            )
-          ]),
+                      SizedBox(
+                        width: PhoneSize(context).adaptHeight(20),
+                      ),
+                      Icon(Icons.arrow_forward_sharp)
+                    ])),
+              )
+            ]),
+          ),
         ),
+        bottomNavigationBar: BottomNavigation(),
       ),
-      bottomNavigationBar: BottomNavigation(),
     );
   }
 }

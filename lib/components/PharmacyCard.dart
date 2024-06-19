@@ -97,7 +97,8 @@ class _PharmacyCardState extends State<PharmacyCard> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Distance: ${widget.distance}',
+                        /*'Distance: ${widget.distance}'*/
+                        "View Distance and Location in map",
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white,

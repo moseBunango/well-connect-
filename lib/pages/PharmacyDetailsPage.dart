@@ -48,13 +48,13 @@ class PharmacyDetailsPage extends StatelessWidget {
                               color: Colors.white,
                             ),
                             ),
-                      SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                      /*SizedBox(height: PhoneSize(context).adaptHeight(10)),
                       Text(
                         'Distance: ${pharmacyData['distance']}',
                         style: TextStyle(
                           color: Colors.white,fontSize:PhoneSize(context).adaptFontSize(18)
                         ),
-                      ),
+                      ),*/
                       TextButton(onPressed: () {
                           Navigator.push(
                           context,

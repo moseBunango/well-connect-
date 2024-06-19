@@ -22,18 +22,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
     ProfilePage(),
   ];
 
-  bool _isLoading = false;
+  
 
   void _onItemTapped(int index) async {
-    setState(() {
-      _isLoading = true; // Show loader when card is tapped
-    });
+    
     await Future.delayed(
-        Duration(seconds: 1)); // Simulate loading for 2 seconds
-    setState(() {
-      _selectedIndex = index;
-      _isLoading = false;
-    });
+        Duration(seconds: 0)); // Simulate loading for 2 seconds
 // Navigate to the corresponding page
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
@@ -48,20 +42,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children:[ 
-         if (_isLoading) 
-            // If still loading, show CircularProgressIndicator covering the entire screen
-             Container(
-                color: Color(0xff2b4260)
-                    .withOpacity(0.7), // Adjust opacity and color as needed
-                child: Center(
-                    child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation(Colors.white), // Adjust color
-                ))),
-          
-        BottomNavigationBar(
+    return  BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -85,7 +66,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
         unselectedItemColor: Colors.teal,
         selectedItemColor: Colors.teal,
         onTap: _onItemTapped,
-      ),
-    ]);
+    );
   }
 }

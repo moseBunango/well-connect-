@@ -119,106 +119,130 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 }
+Future<bool> _onWillPop() async {
+  bool shouldLogout = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Confirm Exit'),
+      content: Text('Do you really want to exit?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text('No'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text('Yes'),
+        ),
+      ],
+    ),
+  );
+  return shouldLogout ;
+}
+
  
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Search',style: TextStyle(color: Colors.white),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Search',style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Color(0xff2b4260),
+          centerTitle: true,
         ),
-        backgroundColor: Color(0xff2b4260),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextFormField(
-                  onChanged: (value) {
-                  setState(() {
-                    searchQuery = value.toLowerCase(); // Update searchQuery with the typed text
-                  });
-                  filteredMedicine(); // Call filteredMedicine() whenever text changes
-                },
-                  controller: searchMedController,
-                  decoration: InputDecoration(
-                    hintText: "Search NCD medicine ",
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        searchMedicine();
-                      },
-                      icon: Icon(Icons.search),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black,
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextFormField(
+                    onChanged: (value) {
+                    setState(() {
+                      searchQuery = value.toLowerCase(); // Update searchQuery with the typed text
+                    });
+                    filteredMedicine(); // Call filteredMedicine() whenever text changes
+                  },
+                    controller: searchMedController,
+                    decoration: InputDecoration(
+                      hintText: "Search NCD medicine ",
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          searchMedicine();
+                        },
+                        icon: Icon(Icons.search),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            // Display filtered medicines
-          if (filteredMedicines.isNotEmpty)
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredMedicines.length,
-                itemBuilder: (context, index) {
-                  final medicine = filteredMedicines[index];
-                  return ListTile(
-                    title: Text(medicine['medicine_name']),
-                    onTap: () {
-                      // Navigate to medicine details page
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MedicineListsPage(medicineData: medicine),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Filte by",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "Categories",
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                children: [
-                  _buildCategory('Blood Pressure', Icons.favorite_border),
-                  _buildCategory('Diabetes', Icons.favorite_border),
-                  _buildCategory('Cancer', Icons.favorite_border),
-                  _buildCategory('Obesity', Icons.favorite_border),
-                ],
+              // Display filtered medicines
+            if (filteredMedicines.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredMedicines.length,
+                  itemBuilder: (context, index) {
+                    final medicine = filteredMedicines[index];
+                    return ListTile(
+                      title: Text(medicine['medicine_name']),
+                      onTap: () {
+                        // Navigate to medicine details page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MedicineListsPage(medicineData: medicine),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),),
+              SizedBox(
+                height: 20,
               ),
-            ),
-          ],
+              Text(
+                "Filte by",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Categories",
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  children: [
+                    _buildCategory('Blood Pressure', Icons.favorite_border),
+                    _buildCategory('Diabetes', Icons.favorite_border),
+                    _buildCategory('Cancer', Icons.favorite_border),
+                    _buildCategory('Obesity', Icons.favorite_border),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
+        bottomNavigationBar: BottomNavigation(),
       ),
-      bottomNavigationBar: BottomNavigation(),
     );
   }
 

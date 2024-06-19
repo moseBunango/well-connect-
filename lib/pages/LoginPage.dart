@@ -266,49 +266,77 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () {},
-                        child: Text("Login with Google",style: TextStyle(color: Colors.white)),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xff2b4260)),
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        Color(0xff2b4260)),
+                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                             EdgeInsets.all(
                                 PhoneSize(context).adaptHeight(15.0)),
                           ),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   PhoneSize(context).adaptHeight(10)),
                             ),
                           ),
-                          overlayColor:
-                              MaterialStateProperty.all<Color>(Colors.teal),
+                          overlayColor: MaterialStateProperty.all<Color>(Colors.teal),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ClipOval(
+                              child: Image.asset(
+                                'lib/assets/google.jpeg', // Make sure the path is correct and the image is in your assets folder
+                                height: PhoneSize(context).adaptHeight(25.0),
+                              ),
+                            ),
+                            SizedBox(
+                              width: PhoneSize(context).adaptHeight(10.0),
+                            ),
+                            Text(
+                              "Login with Google",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
-                        width: PhoneSize(context).adaptHeight(60),
+                        width: PhoneSize(context).adaptHeight(20),
                       ),
                       ElevatedButton(
                         onPressed: () {},
-                        child: Text("Login with Facebook",style: TextStyle(color: Colors.white)),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xff2b4260)),
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        Color(0xff2b4260)),
+                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                             EdgeInsets.all(
                                 PhoneSize(context).adaptHeight(15.0)),
                           ),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   PhoneSize(context).adaptHeight(10)),
                             ),
                           ),
-                          overlayColor:
-                              MaterialStateProperty.all<Color>(Colors.teal),
+                          overlayColor: MaterialStateProperty.all<Color>(Colors.teal),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ClipOval(
+                              child: Image.asset(
+                                'lib/assets/apple.jpeg', // Make sure the path is correct and the image is in your assets folder
+                                height: PhoneSize(context).adaptHeight(30.0),
+                              ),
+                            ),
+                            SizedBox(
+                              width: PhoneSize(context).adaptHeight(10.0),
+                            ),
+                            Text(
+                              "Login with Apple",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -335,6 +363,21 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       overlayColor:
                           MaterialStateProperty.all<Color>(Colors.teal),
+                    ),
+                  ),
+                  SizedBox(
+                    height: PhoneSize(context).adaptHeight(10),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/LogInPage');
+                    },
+                    child: Text(
+                      "I have forgotten my password",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey[600]
+                      ),
                     ),
                   ),
                 ],

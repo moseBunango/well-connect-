@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:well_connect_app/pages/FlutterWavePayment.dart';
+import 'package:well_connect_app/pages/ThankYouPage.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -117,6 +118,11 @@ class _OrderPageState extends State<OrderPage> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
+        await moveCartsToOrderHistory();
+         Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>Thankyoupage()),
+          );
       } else {
         throw Exception(response['message'] ?? 'Failed to place order');
       }
@@ -131,7 +137,6 @@ class _OrderPageState extends State<OrderPage> {
         textColor: Colors.white,
       );
     }
-    await moveCartsToOrderHistory();
   }
 
   Future<void> moveCartsToOrderHistory() async {
@@ -243,166 +248,190 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
+  Future<bool> _onWillPop() async {
+  bool shouldLogout = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Confirm Exit'),
+      content: Text('Do you really want to exit?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text('No'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text('Yes'),
+        ),
+      ],
+    ),
+  );
+  return shouldLogout ;
+}
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xff2b4260),
-        centerTitle: true,
-        title: Text(
-          'Order',style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/OrderHistoryPage');
-                          },
-                          child: Text(
-                            'view my order History',
-                            style: TextStyle(color: Colors.teal),
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
-                            ),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: _pickFile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff2b4260),
-                            padding: EdgeInsets.all(10),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.attach_file,
-                                color: Colors.teal,
-                              ),
-                              Text(
-                                fileSelected ? fileName : 'Upload prescription',
+    return  WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color(0xff2b4260),
+            centerTitle: true,
+            title: Text(
+              'Order',style: TextStyle(color: Colors.white),
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/OrderHistoryPage');
+                              },
+                              child: Text(
+                                'view my order History',
                                 style: TextStyle(color: Colors.teal),
-                              ), // Display file name if selected, otherwise default text
-                            ],
-                          ),
-                        ),
-                      ]),
-                ),
-                SizedBox(
-                  height: PhoneSize(context).adaptHeight(10),
-                ),
-                cartItems.isEmpty
-                    ? Text(
-                        'Currently you do not have any orders',
-                        style: TextStyle(
-                            fontSize: PhoneSize(context).adaptFontSize(18),
-                            fontWeight: FontWeight.bold),
-                      )
-                    :
-                    // Your order form fields here
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: cartItems.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            child: ListTile(
-                              title: Text(cartItems[index]['pharmacyName']),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: _pickFile,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xff2b4260),
+                                padding: EdgeInsets.all(10),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
+                                  Icon(
+                                    Icons.attach_file,
+                                    color: Colors.teal,
+                                  ),
                                   Text(
-                                      'Medicine: ${cartItems[index]['medicineName']}'),
-                                  Text(
-                                      'Price: ${cartItems[index]['medicinePrice']}'),
-                                  Text(
-                                      'Category: ${cartItems[index]['medicineCategory']}'),
-                                  Text(
-                                      'Location: ${cartItems[index]['pharmacyLocation']}'),
+                                    fileSelected ? fileName : 'Upload prescription',
+                                    style: TextStyle(color: Colors.teal),
+                                  ), // Display file name if selected, otherwise default text
                                 ],
                               ),
-                              trailing: IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () => deleteCartItem(index),
-                              ),
                             ),
-                          );
-                        },
+                          ]),
+                    ),
+                    SizedBox(
+                      height: PhoneSize(context).adaptHeight(10),
+                    ),
+                    cartItems.isEmpty
+                        ? Text(
+                            'Currently you do not have any orders',
+                            style: TextStyle(
+                                fontSize: PhoneSize(context).adaptFontSize(18),
+                                fontWeight: FontWeight.bold),
+                          )
+                        :
+                        // Your order form fields here
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: cartItems.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                child: ListTile(
+                                  title: Text(cartItems[index]['pharmacyName']),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          'Medicine: ${cartItems[index]['medicineName']}'),
+                                      Text(
+                                          'Price: ${cartItems[index]['medicinePrice']}'),
+                                      Text(
+                                          'Category: ${cartItems[index]['medicineCategory']}'),
+                                      Text(
+                                          'Location: ${cartItems[index]['pharmacyLocation']}'),
+                                    ],
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () => deleteCartItem(index),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                    SizedBox(
+                      height: PhoneSize(context).adaptHeight(10),
+                    ),
+                    // Payment options
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Select Payment Method:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        RadioListTile<String>(
+                          title: Text('Pay after delivery'),
+                          value: 'Pay after delivery',
+                          groupValue: selectedPaymentMethod,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedPaymentMethod = value;
+                            });
+                          },
+                        ),
+                        RadioListTile<String>(
+                          title: Text('Pay online before delivery'),
+                          value: 'Pay online before delivery',
+                          groupValue: selectedPaymentMethod,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedPaymentMethod = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    // Button to pick files
+                    SizedBox(
+                      height: PhoneSize(context).adaptHeight(10),
+                    ),
+        
+                    // Place order button
+                    ElevatedButton(
+                      onPressed: _completePaymentAndPlaceOrder,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xff2b4260),
+                        padding: EdgeInsets.all(15),
+                        minimumSize: Size(
+                            double.infinity, 50.0), // Set fixed width and height
                       ),
-                SizedBox(
-                  height: PhoneSize(context).adaptHeight(10),
-                ),
-                // Payment options
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Select Payment Method:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    RadioListTile<String>(
-                      title: Text('Pay after delivery'),
-                      value: 'Pay after delivery',
-                      groupValue: selectedPaymentMethod,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedPaymentMethod = value;
-                        });
-                      },
-                    ),
-                    RadioListTile<String>(
-                      title: Text('Pay online before delivery'),
-                      value: 'Pay online before delivery',
-                      groupValue: selectedPaymentMethod,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedPaymentMethod = value;
-                        });
-                      },
+                      child: _isLoading
+                          ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.teal),
+                            )
+                          : Text(
+                              'Complete payments & place order',style: TextStyle(color: Colors.white),
+                            ),
                     ),
                   ],
                 ),
-                // Button to pick files
-                SizedBox(
-                  height: PhoneSize(context).adaptHeight(10),
-                ),
-
-                // Place order button
-                ElevatedButton(
-                  onPressed: _completePaymentAndPlaceOrder,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff2b4260),
-                    padding: EdgeInsets.all(15),
-                    minimumSize: Size(
-                        double.infinity, 50.0), // Set fixed width and height
-                  ),
-                  child: _isLoading
-                      ? CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(Colors.teal),
-                        )
-                      : Text(
-                          'Complete payments & place order',style: TextStyle(color: Colors.white),
-                        ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          bottomNavigationBar: BottomNavigation(),
       ),
-      bottomNavigationBar: BottomNavigation(),
     );
   }
 }
