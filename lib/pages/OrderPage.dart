@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:well_connect_app/pages/FlutterWavePayment.dart';
 import 'package:well_connect_app/pages/ThankYouPage.dart';
+import 'package:well_connect_app/pages/user_list_page.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -280,6 +281,24 @@ class _OrderPageState extends State<OrderPage> {
             title: Text(
               'Order',style: TextStyle(color: Colors.white),
             ),
+            actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserListPage()),
+                );
+              },
+              child: Text(
+                'Order Status',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
           ),
           body: SingleChildScrollView(
             child: Center(
