@@ -48,6 +48,7 @@ class _SearchPageState extends State<SearchPage> {
       print('Error: $e');
     }
   }
+
   void searchMedicine() {
     searchQuery = searchMedController.text.toLowerCase();
     if (searchQuery.isEmpty) {
@@ -61,7 +62,8 @@ class _SearchPageState extends State<SearchPage> {
     }
     // Find the pharmacy in the data
     Map<String, dynamic>? searchedMedicine = medicineData.firstWhere(
-      (medicine) => medicine['medicine_name'].toLowerCase() == searchQuery.toLowerCase(),
+      (medicine) =>
+          medicine['medicine_name'].toLowerCase() == searchQuery.toLowerCase(),
       orElse: () => {},
     );
     // ignore: unnecessary_null_comparison
@@ -83,65 +85,64 @@ class _SearchPageState extends State<SearchPage> {
       );
     }
   }
- void filteredMedicine() {
-  // Filter the medicines based on the search query
-  List<Map<String, dynamic>> filteredMedicines = medicineData
-      .where((medicine) =>
-          medicine['medicine_name']
-              .toString()
-              .toLowerCase()
-              .startsWith(searchQuery))
-      .toList();
 
-  if (searchQuery.isNotEmpty) { // Check if search query is not empty
-    if (filteredMedicines.isNotEmpty) {
-      // Update the UI with the filtered medicines
-      setState(() {
-        // Assign the filteredMedicines list to a new list to display below the search field
-        this.filteredMedicines = filteredMedicines;
-      });
+  void filteredMedicine() {
+    // Filter the medicines based on the search query
+    List<Map<String, dynamic>> filteredMedicines = medicineData
+        .where((medicine) => medicine['medicine_name']
+            .toString()
+            .toLowerCase()
+            .startsWith(searchQuery))
+        .toList();
+
+    if (searchQuery.isNotEmpty) {
+      // Check if search query is not empty
+      if (filteredMedicines.isNotEmpty) {
+        // Update the UI with the filtered medicines
+        setState(() {
+          // Assign the filteredMedicines list to a new list to display below the search field
+          this.filteredMedicines = filteredMedicines;
+        });
+      } else {
+        // If no medicines found, clear the displayed list
+        setState(() {
+          this.filteredMedicines = [];
+        });
+        // Show a message to indicate no medicines found
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No medicines found for "$searchQuery"'),
+          ),
+        );
+      }
     } else {
-      // If no medicines found, clear the displayed list
+      // If search query is empty, clear the displayed list
       setState(() {
         this.filteredMedicines = [];
       });
-      // Show a message to indicate no medicines found
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('No medicines found for "$searchQuery"'),
-        ),
-      );
     }
-  } else {
-    // If search query is empty, clear the displayed list
-    setState(() {
-      this.filteredMedicines = [];
-    });
   }
-}
-Future<bool> _onWillPop() async {
-  bool shouldLogout = await showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Confirm Exit'),
-      content: Text('Do you really want to exit?'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text('No'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text('Yes'),
-        ),
-      ],
-    ),
-  );
-  return shouldLogout ;
-}
 
- 
-
+  Future<bool> _onWillPop() async {
+    bool shouldLogout = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Exit'),
+        content: Text('Do you really want to exit?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    );
+    return shouldLogout;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,13 +151,14 @@ Future<bool> _onWillPop() async {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Search',style: TextStyle(color: Colors.white),
+            'Search',
+            style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0xff2b4260),
           centerTitle: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -165,14 +167,15 @@ Future<bool> _onWillPop() async {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(0),
                   child: TextFormField(
                     onChanged: (value) {
-                    setState(() {
-                      searchQuery = value.toLowerCase(); // Update searchQuery with the typed text
-                    });
-                    filteredMedicine(); // Call filteredMedicine() whenever text changes
-                  },
+                      setState(() {
+                        searchQuery = value
+                            .toLowerCase(); // Update searchQuery with the typed text
+                      });
+                      filteredMedicine(); // Call filteredMedicine() whenever text changes
+                    },
                     controller: searchMedController,
                     decoration: InputDecoration(
                       hintText: "Search NCD medicine ",
@@ -192,32 +195,39 @@ Future<bool> _onWillPop() async {
                 ),
               ),
               // Display filtered medicines
-            if (filteredMedicines.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                  itemCount: filteredMedicines.length,
-                  itemBuilder: (context, index) {
-                    final medicine = filteredMedicines[index];
-                    return ListTile(
-                      title: Text(medicine['medicine_name']),
-                      onTap: () {
-                        // Navigate to medicine details page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MedicineListsPage(medicineData: medicine),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),),
+              if (filteredMedicines.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredMedicines.length,
+                    itemBuilder: (context, index) {
+                      final medicine = filteredMedicines[index];
+                      return ListTile(
+                        tileColor: Color(0xff2b4260).withOpacity(0.1),
+                        title: Text(
+                          medicine['medicine_name'],
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        onTap: () {
+                          // Navigate to medicine details page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MedicineListsPage(medicineData: medicine),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+
               SizedBox(
                 height: 20,
               ),
               Text(
                 "Filte by",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
               Text(
                 "Categories",
@@ -248,12 +258,11 @@ Future<bool> _onWillPop() async {
 
   Widget _buildCategory(String name, IconData icon) {
     return GestureDetector(
-      onTap: () {
-      },
+      onTap: () {},
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: Color(0xff2b4260).withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -262,13 +271,13 @@ Future<bool> _onWillPop() async {
             Icon(
               icon,
               size: 50,
-              color: Colors.teal,
+              color: Color(0xff2b4260),
             ),
             SizedBox(height: 10),
             Text(
               name,
               style: TextStyle(
-                color: Colors.teal,
+                color: Color(0xff2b4260),
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),

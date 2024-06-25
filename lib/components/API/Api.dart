@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
-  final String apiUrl = 'http://192.168.137.1:8000/api';
+  final String apiUrl = 'http://192.168.137.242:8000/api';
 
   Future<void> storeAuthToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -178,6 +178,7 @@ class Api {
 
     return response;
   }
+
   Future<http.Response> moveCartsToOrderHistory(
       {required String route, }) async {
     final token = await retrieveAuthToken();

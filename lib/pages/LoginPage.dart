@@ -143,22 +143,27 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15.0),
-                    child: Image.asset(
-                      "lib/assets/loginpageimage.png",
-                      height: PhoneSize(context).adaptHeight(250),
-                      fit: BoxFit.cover, // Adjust image scaling
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Image.asset(
+                        "lib/assets/WC.png",
+                        height: PhoneSize(context).adaptHeight(80),
+                        fit: BoxFit.cover, // Adjust image scaling
+                      ),
+                      
                     ),
                   ),
                   SizedBox(
-                    height: PhoneSize(context).adaptHeight(20),
+                    height: PhoneSize(context).adaptHeight(5),
                   ),
-                  Text(
-                    "Sign in",
-                    style: TextStyle(
-                      fontSize: PhoneSize(context).adaptFontSize(30),
-                      fontWeight: FontWeight.bold, // Attractive color
+                  Center(
+                    child: Text(
+                      "Sign in",
+                      style: TextStyle(
+                        fontSize: PhoneSize(context).adaptFontSize(35),
+                        fontWeight: FontWeight.bold, // Attractive color
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -166,12 +171,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'yourEmail@domain.com',
+                      labelText: 'Email',
                       filled: true,
                       fillColor: Colors.grey[200], // Subtle background
                       border: OutlineInputBorder(
                         borderRadius:
-                            BorderRadius.circular(10.0), // Rounded corners
+                            BorderRadius.circular(0), // Rounded corners
                         borderSide: BorderSide(
                           color: Colors.teal, // Consistent color
                         ),
@@ -186,16 +191,16 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
+                    height: PhoneSize(context).adaptHeight(20),
                   ),
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Enter your password',
+                      labelText: 'Password',
                       filled: true,
                       fillColor: Colors.grey[200], // Subtle background
                       border: OutlineInputBorder(
                         borderRadius:
-                            BorderRadius.circular(10.0), // Rounded corners
+                            BorderRadius.circular(0), // Rounded corners
                         borderSide: BorderSide(
                           color: Colors.teal, // Consistent color
                         ),
@@ -210,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                           _obscurePassword
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Colors.teal, // Consistent color
+                          color: Color(0xff2b4260), // Consistent color
                         ),
                       ),
                     ),
@@ -231,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: _isLoggingin
                         ? CircularProgressIndicator()
                         : Text(
-                            "Login",style: TextStyle(color: Colors.white)
+                            "Login",style: TextStyle(color: Colors.white,fontSize: 20)
                           ),
                     style: ButtonStyle(
                       backgroundColor:
@@ -242,141 +247,142 @@ class _LoginPageState extends State<LoginPage> {
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                              PhoneSize(context).adaptHeight(10)),
+                              PhoneSize(context).adaptHeight(0)),
                         ),
                       ),
                       overlayColor:
                           MaterialStateProperty.all<Color>(Colors.teal),
                     ),
                   ),
-                  SizedBox(height: PhoneSize(context).adaptHeight(20)),
-                  Text(
-                    "OR",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: PhoneSize(context).adaptHeight(16),
-                    ),
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                        Color(0xff2b4260)),
-                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            EdgeInsets.all(
-                                PhoneSize(context).adaptHeight(15.0)),
-                          ),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  PhoneSize(context).adaptHeight(10)),
-                            ),
-                          ),
-                          overlayColor: MaterialStateProperty.all<Color>(Colors.teal),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ClipOval(
-                              child: Image.asset(
-                                'lib/assets/google.jpeg', // Make sure the path is correct and the image is in your assets folder
-                                height: PhoneSize(context).adaptHeight(25.0),
-                              ),
-                            ),
-                            SizedBox(
-                              width: PhoneSize(context).adaptHeight(10.0),
-                            ),
-                            Text(
-                              "Login with Google",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: PhoneSize(context).adaptHeight(20),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                        Color(0xff2b4260)),
-                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            EdgeInsets.all(
-                                PhoneSize(context).adaptHeight(15.0)),
-                          ),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  PhoneSize(context).adaptHeight(10)),
-                            ),
-                          ),
-                          overlayColor: MaterialStateProperty.all<Color>(Colors.teal),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ClipOval(
-                              child: Image.asset(
-                                'lib/assets/apple.jpeg', // Make sure the path is correct and the image is in your assets folder
-                                height: PhoneSize(context).adaptHeight(30.0),
-                              ),
-                            ),
-                            SizedBox(
-                              width: PhoneSize(context).adaptHeight(10.0),
-                            ),
-                            Text(
-                              "Login with Apple",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(30),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/Register');
-                    },
-                    child: Text("Create an account",style: TextStyle(color: Colors.white)),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Color(0xff2b4260)),
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.all(PhoneSize(context).adaptHeight(15.0)),
-                      ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              PhoneSize(context).adaptHeight(10)),
-                        ),
-                      ),
-                      overlayColor:
-                          MaterialStateProperty.all<Color>(Colors.teal),
-                    ),
-                  ),
+                  // SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                  // Text(
+                  //   "OR",
+                  //   textAlign: TextAlign.center,
+                  //   style: TextStyle(
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: PhoneSize(context).adaptHeight(20),
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: PhoneSize(context).adaptHeight(10),
+                  // ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     ElevatedButton(
+                  //       onPressed: () {},
+                  //       style: ButtonStyle(
+                  //         backgroundColor: MaterialStateProperty.all<Color>(
+                  //       Color(0xff2b4260)),
+                  //         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  //           EdgeInsets.all(
+                  //               PhoneSize(context).adaptHeight(15.0)),
+                  //         ),
+                  //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  //           RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(
+                  //                 PhoneSize(context).adaptHeight(10)),
+                  //           ),
+                  //         ),
+                  //         overlayColor: MaterialStateProperty.all<Color>(Colors.teal),
+                  //       ),
+                  //       child: Row(
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         children: [
+                  //           ClipOval(
+                  //             child: Image.asset(
+                  //               'lib/assets/google.jpeg', // Make sure the path is correct and the image is in your assets folder
+                  //               height: PhoneSize(context).adaptHeight(25.0),
+                  //             ),
+                  //           ),
+                  //           SizedBox(
+                  //             width: PhoneSize(context).adaptHeight(10.0),
+                  //           ),
+                  //           Text(
+                  //             "Login with Google",
+                  //             style: TextStyle(color: Colors.white),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     SizedBox(
+                  //       width: PhoneSize(context).adaptHeight(20),
+                  //     ),
+                  //     ElevatedButton(
+                  //       onPressed: () {},
+                  //       style: ButtonStyle(
+                  //         backgroundColor: MaterialStateProperty.all<Color>(
+                  //       Color(0xff2b4260)),
+                  //         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  //           EdgeInsets.all(
+                  //               PhoneSize(context).adaptHeight(15.0)),
+                  //         ),
+                  //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  //           RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(
+                  //                 PhoneSize(context).adaptHeight(10)),
+                  //           ),
+                  //         ),
+                  //         overlayColor: MaterialStateProperty.all<Color>(Colors.teal),
+                  //       ),
+                  //       child: Row(
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         children: [
+                  //           ClipOval(
+                  //             child: Image.asset(
+                  //               'lib/assets/apple.jpeg', // Make sure the path is correct and the image is in your assets folder
+                  //               height: PhoneSize(context).adaptHeight(30.0),
+                  //             ),
+                  //           ),
+                  //           SizedBox(
+                  //             width: PhoneSize(context).adaptHeight(10.0),
+                  //           ),
+                  //           Text(
+                  //             "Login with Apple",
+                  //             style: TextStyle(color: Colors.white),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: PhoneSize(context).adaptHeight(30),
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Navigator.pushNamed(context, '/Register');
+                  //   },
+                  //   child: Text("Create an account",style: TextStyle(color: Colors.white,fontSize: 20)),
+                  //   style: ButtonStyle(
+                  //     backgroundColor:
+                  //         MaterialStateProperty.all<Color>(Color(0xff2b4260)),
+                  //     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  //       EdgeInsets.all(PhoneSize(context).adaptHeight(15.0)),
+                  //     ),
+                  //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  //       RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(
+                  //             PhoneSize(context).adaptHeight(10)),
+                  //       ),
+                  //     ),
+                  //     overlayColor:
+                  //         MaterialStateProperty.all<Color>(Colors.teal),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: PhoneSize(context).adaptHeight(10),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/LogInPage');
+                      Navigator.pushNamed(context, '/Register');
                     },
                     child: Text(
-                      "I have forgotten my password",
+                      "I dont have an account? Register",
                       style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey[600]
+
+                        color: Colors.grey[600],
+                        fontSize: 18,
                       ),
                     ),
                   ),
