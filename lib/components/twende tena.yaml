@@ -20,3 +20,6 @@ nashindwa kulog in sababu ip address pc nimeconnect mtandao na router
 na sio simu
 Irun tena alaf ikitokea iache hapohapo nitarekebisha
 ila make sure umeconnect hotspot ya simu na pc, hata ukizima data hainashida 
+Future.delayed(Duration(seconds: 3), () {
+      fetchMessages();
+    });

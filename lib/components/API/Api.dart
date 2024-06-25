@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
-  final String apiUrl = 'http://192.168.137.1:8000/api';
+  final String apiUrl = 'http://192.168.100.138:8000/api';
 
   Future<void> storeAuthToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -208,6 +208,34 @@ class Api {
     }
     String fullUrl = apiUrl + route;
     return await http.get(Uri.parse(fullUrl), headers: headers);
+  }
+
+  Future<http.Response> getUserList({required String route}) async {
+    final token = await retrieveAuthToken();
+    final headers = _header();
+    if (token != null) {
+      headers.addAll({'Authorization': 'Bearer $token'});
+    }
+    String fullUrl = apiUrl + route;
+    return await http.get(Uri.parse(fullUrl), headers: headers);
+  }
+  Future<http.Response> getMesseges({required String route}) async {
+    final token = await retrieveAuthToken();
+    final headers = _header();
+    if (token != null) {
+      headers.addAll({'Authorization': 'Bearer $token'});
+    }
+    String fullUrl = apiUrl + route;
+    return await http.get(Uri.parse(fullUrl), headers: headers);
+  }
+  Future<http.Response> sendMessages({required String route, required body}) async {
+    final token = await retrieveAuthToken();
+    final headers = _header();
+    if (token != null) {
+      headers.addAll({'Authorization': 'Bearer $token'});
+    }
+    String fullUrl = apiUrl + route;
+    return await http.post(Uri.parse(fullUrl),body: jsonEncode(body), headers: headers);
   }
 
   _header() =>
