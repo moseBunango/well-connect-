@@ -3,11 +3,9 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
-<<<<<<< HEAD
-  final String apiUrl = 'http://192.168.137.242:8000/api';
-=======
+
   final String apiUrl = 'http://192.168.100.138:8000/api';
->>>>>>> origin/master
+
 
   Future<void> storeAuthToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
