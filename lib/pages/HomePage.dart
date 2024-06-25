@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> pharmacyData = [];
-  List<Map<String, dynamic>>displayedPharmacies = [];
+  List<Map<String, dynamic>> displayedPharmacies = [];
   Timer? _autoScrollTimer;
   final ScrollController _scrollController = ScrollController();
   double _itemWidth = 0.0;
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchPharmacies() async {
     // Call your API to fetch pharmacies
     try {
-      final result = await Api().getPharmacyData(route:'/getPharmacy');
+      final result = await Api().getPharmacyData(route: '/getPharmacy');
       final response = json.decode(result.body);
 
       if (response['status']) {
@@ -121,124 +121,126 @@ class _HomePageState extends State<HomePage> {
       );
     }
   }
-  void filteredPharmacy(){
-  // Filter the pharmacies based on the search query
-  List<Map<String, dynamic>> filteredPharmacies = pharmacyData
-      .where((pharmacy) =>
-          pharmacy['name'].toString().toLowerCase().startsWith(searchQuery))
-      .toList();
 
-  if (searchQuery.isNotEmpty) { // Check if search query is not empty
-    if (filteredPharmacies.isNotEmpty) {
-      // Update the UI with the filtered pharmacies
-      setState(() {
-        // Assign the filteredPharmacies list to a new list to display below the search field
-        displayedPharmacies = filteredPharmacies;
-      });
+  void filteredPharmacy() {
+    // Filter the pharmacies based on the search query
+    List<Map<String, dynamic>> filteredPharmacies = pharmacyData
+        .where((pharmacy) =>
+            pharmacy['name'].toString().toLowerCase().startsWith(searchQuery))
+        .toList();
+
+    if (searchQuery.isNotEmpty) {
+      // Check if search query is not empty
+      if (filteredPharmacies.isNotEmpty) {
+        // Update the UI with the filtered pharmacies
+        setState(() {
+          // Assign the filteredPharmacies list to a new list to display below the search field
+          displayedPharmacies = filteredPharmacies;
+        });
+      } else {
+        // If no pharmacies found, clear the displayed list
+        setState(() {
+          displayedPharmacies = [];
+        });
+        // Show a message to indicate no pharmacies found
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No pharmacies found for "$searchQuery"'),
+          ),
+        );
+      }
     } else {
-      // If no pharmacies found, clear the displayed list
+      // If search query is empty, clear the displayed list
       setState(() {
         displayedPharmacies = [];
       });
-      // Show a message to indicate no pharmacies found
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('No pharmacies found for "$searchQuery"'),
-        ),
-      );
     }
-  } else {
-    // If search query is empty, clear the displayed list
-    setState(() {
-      displayedPharmacies = [];
-    });
   }
-}
 
-Future<bool> _onWillPop() async {
-  bool shouldLogout = await showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Confirm Exit'),
-      content: Text('Do you really want to exit?'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text('No'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text('Yes'),
-        ),
-      ],
-    ),
-  );
-  return shouldLogout ;
-}
+  Future<bool> _onWillPop() async {
+    bool shouldLogout = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Exit'),
+        content: Text('Do you really want to exit?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    );
+    return shouldLogout;
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xff2b4260),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, 
-                children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(6.0),
-                      bottomRight: Radius.circular(6.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(6.0),
+                    bottomRight: Radius.circular(6.0),
+                  ),
+                  color: Color(0xff2b4260),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: Offset(0, 3), // changes position of shadow
                     ),
-                    color: Color(0xff2b4260),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 6,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  padding: EdgeInsets.all(20.0),
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: PhoneSize(context).adaptHeight(50),
-                      ),
-                      Text(
-                        "Welcome to",
-                        style: TextStyle(
-                          fontSize: PhoneSize(context).adaptFontSize(24),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        height: PhoneSize(context).adaptHeight(10),
-                      ),
-                      Text(
-                        "Well-Connect",
-                        style: TextStyle(
-                          fontSize: PhoneSize(context).adaptFontSize(30),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
+                padding: EdgeInsets.all(10.0),
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  
+                    Text(
+                      "Welcome to",
+                      style: TextStyle(
+                        fontSize: PhoneSize(context).adaptFontSize(25),
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: PhoneSize(context).adaptHeight(10),
+                    ),
+                    Text(
+                      "Well-Connect",
+                      style: TextStyle(
+                        fontSize: PhoneSize(context).adaptFontSize(45),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Center(
                 child: Padding(
-                  padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20.0)),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   child: TextFormField(
                     onChanged: (value) {
-                       setState(() {
-                        searchQuery = value.toLowerCase(); // Update searchQuery with the typed text
+                      setState(() {
+                        searchQuery = value
+                            .toLowerCase(); // Update searchQuery with the typed text
                       });
                       filteredPharmacy(); // Call filteredPharmacy() whenever text changes
                     },
@@ -279,22 +281,22 @@ Future<bool> _onWillPop() async {
                     );
                   }).toList(),
                 ),
-      
-              SizedBox(
-                height:PhoneSize(context).adaptHeight(5),
-              ),
+
               Container(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   "View Pharmacies",
-                  style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(16), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: PhoneSize(context).adaptFontSize(25),
+                  ),
                 ),
               ),
               SizedBox(
-                height: PhoneSize(context).adaptHeight(20),
+                height: PhoneSize(context).adaptHeight(10),
               ),
               Container(
-                height: PhoneSize(context).adaptHeight(250), // Adjust height as needed
+                height: PhoneSize(context)
+                    .adaptHeight(300), // Adjust height as needed
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: _scrollController,
@@ -321,34 +323,42 @@ Future<bool> _onWillPop() async {
                 ),
               ),
               SizedBox(
-                height: PhoneSize(context).adaptHeight(20),
+                height: PhoneSize(context).adaptHeight(10),
               ),
               Container(
-                padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20)),
+                padding: EdgeInsets.all(PhoneSize(context).adaptHeight(10)),
                 child: Text(
                   "Health assesment",
-                  style: TextStyle(fontSize: PhoneSize(context).adaptFontSize(16), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: PhoneSize(context).adaptFontSize(25),
+                  ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.all(PhoneSize(context).adaptHeight(20.0)),
-                child: TextButton(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  color: Color(0xff2b4260).withOpacity(0.1), // Faint gray background
+                  child: TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/AssesmentFormPage');
                     },
-                    child: Row(children: [
-                      Text(
-                        "take NCD risk test",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: PhoneSize(context).adaptFontSize(14),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceBetween, // Ensures the icon is at the right end
+                      children: [
+                        Text(
+                          "take NCD risk test",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: PhoneSize(context).adaptFontSize(20),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: PhoneSize(context).adaptHeight(20),
-                      ),
-                      Icon(Icons.arrow_forward_sharp)
-                    ])),
+                        Icon(Icons.arrow_forward_sharp,color: Colors.black,),
+                      ],
+                    ),
+                  ),
+                ),
               )
             ]),
           ),

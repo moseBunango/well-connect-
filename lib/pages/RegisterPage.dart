@@ -4,7 +4,6 @@ import 'package:well_connect_app/components/API/PhoneSize.dart';
 import 'dart:convert';
 import 'dart:async';
 
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -22,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isRegistering = false;
   final _formKey = GlobalKey<FormState>();
 
-   Future<void> registerUser() async {
+  Future<void> registerUser() async {
     if (!_formKey.currentState!.validate()) {
       // Form is not valid, do not proceed with registration
       return;
@@ -73,11 +72,11 @@ class _RegisterPageState extends State<RegisterPage> {
         String errorMessage = '';
         int errorNumber = 1;
         response['error'].forEach((field, errors) {
-        errors.forEach((error) {
-        errorMessage += '$errorNumber. $error \n';
-        errorNumber++;
-  });
-});
+          errors.forEach((error) {
+            errorMessage += '$errorNumber. $error \n';
+            errorNumber++;
+          });
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Registration failed:\n $errorMessage'),
@@ -120,7 +119,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,12 +131,25 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    "Register",
-                    style: TextStyle(
-                      fontSize: PhoneSize(context).adaptFontSize(30),
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff2b4260),
+                    Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Image.asset(
+                        "lib/assets/WC.png",
+                        height: PhoneSize(context).adaptHeight(80),
+                        fit: BoxFit.cover, // Adjust image scaling
+                      ),
+                      
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      "Register",
+                      style: TextStyle(
+                        fontSize: PhoneSize(context).adaptFontSize(35),
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff2b4260),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -147,8 +158,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     "Simplify your NCD medication ordering process and perform health assessment to analyze your NCD risk",
                     style: TextStyle(
-                      fontSize: PhoneSize(context).adaptFontSize(14),
-                      fontWeight: FontWeight.bold,
+                      fontSize: PhoneSize(context).adaptFontSize(20),
+
                       color: Colors.grey[600],
                     ),
                     textAlign: TextAlign.center,
@@ -156,42 +167,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(
                     height: PhoneSize(context).adaptHeight(30),
                   ),
-                  Text("Email"),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'example@email.com',
+                      labelText: 'Name',
                       filled: true,
-                      fillColor: Colors.grey[200],
+                      fillColor: Colors.grey[200], // Subtle background
                       border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(
-                            PhoneSize(context).adaptHeight(10)),
-                      ),
-                    ),
-                    controller: emailController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Email is required';
-                      }
-                      return null;
-                    },
-                  ),
-                  Text("Name"),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: 'joe doe',
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
                         borderRadius:
-                            BorderRadius.circular(PhoneSize(context).adaptHeight(10)),
+                            BorderRadius.circular(0), // Rounded corners
+                        borderSide: BorderSide(
+                          color: Colors.teal, // Consistent color
+                        ),
                       ),
                     ),
                     controller: nameController,
@@ -203,21 +189,43 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                   ),
                   SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  Text("Password"),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
+                    height: PhoneSize(context).adaptHeight(20),
                   ),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: '********',
+                      labelText: 'Email',
                       filled: true,
-                      fillColor: Colors.grey[200],
+                      fillColor: Colors.grey[200], // Subtle background
                       border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
                         borderRadius:
-                            BorderRadius.circular(PhoneSize(context).adaptHeight(10)),
+                            BorderRadius.circular(0), // Rounded corners
+                        borderSide: BorderSide(
+                          color: Colors.teal, // Consistent color
+                        ),
+                      ),
+                    ),
+                    controller: emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: PhoneSize(context).adaptHeight(20),
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      filled: true,
+                      fillColor: Colors.grey[200], // Subtle background
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(0), // Rounded corners
+                        borderSide: BorderSide(
+                          color: Colors.teal, // Consistent color
+                        ),
                       ),
                       suffixIcon: IconButton(
                         onPressed: () {
@@ -243,21 +251,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                   ),
                   SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  Text("Confirm Password"),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
+                    height: PhoneSize(context).adaptHeight(20),
                   ),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: '********',
+                      labelText: 'Password confirmation',
                       filled: true,
-                      fillColor: Colors.grey[200],
+                      fillColor: Colors.grey[200], // Subtle background
                       border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
                         borderRadius:
-                            BorderRadius.circular(PhoneSize(context).adaptHeight(10)),
+                            BorderRadius.circular(0), // Rounded corners
+                        borderSide: BorderSide(
+                          color: Colors.teal, // Consistent color
+                        ),
                       ),
                     ),
                     obscureText: _obscurePassword,
@@ -279,9 +285,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                     child: _isRegistering
                         ? CircularProgressIndicator()
-                        : Text(
-                            "Register",style: TextStyle(color: Colors.white)
-                          ),
+                        : Text("Register",
+                            style: TextStyle(color: Colors.white,fontSize: 20)),
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Color(0xff2b4260)),
@@ -290,24 +295,22 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(PhoneSize(context).adaptHeight(10)),
+                          borderRadius: BorderRadius.circular(
+                              PhoneSize(context).adaptHeight(0)),
                         ),
                       ),
                       overlayColor:
                           MaterialStateProperty.all<Color>(Colors.teal),
                     ),
                   ),
-                  SizedBox(height: PhoneSize(context).adaptHeight(20.0)),
+                  SizedBox(height: PhoneSize(context).adaptHeight(10.0)),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/LogInPage');
                     },
                     child: Text(
                       "Already have an Account? Login",
-                      style: TextStyle(
-                        color: Colors.grey[600]
-                      ),
+                      style: TextStyle(color: Colors.grey[600],fontSize: 18),
                     ),
                   ),
                 ],

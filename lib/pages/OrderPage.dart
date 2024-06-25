@@ -317,11 +317,11 @@ class _OrderPageState extends State<OrderPage> {
                               },
                               child: Text(
                                 'view my order History',
-                                style: TextStyle(color: Colors.teal),
+                                style: TextStyle(color: Color(0xff2b4260),fontSize: 18),
                               ),
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 20,
+                                  horizontal: 5,
                                   vertical: 10,
                                 ),
                               ),
@@ -337,11 +337,11 @@ class _OrderPageState extends State<OrderPage> {
                                 children: [
                                   Icon(
                                     Icons.attach_file,
-                                    color: Colors.teal,
+                                    color: Colors.white,
                                   ),
                                   Text(
                                     fileSelected ? fileName : 'Upload prescription',
-                                    style: TextStyle(color: Colors.teal),
+                                    style: TextStyle(color: Colors.white),
                                   ), // Display file name if selected, otherwise default text
                                 ],
                               ),
@@ -349,14 +349,14 @@ class _OrderPageState extends State<OrderPage> {
                           ]),
                     ),
                     SizedBox(
-                      height: PhoneSize(context).adaptHeight(10),
+                      height: PhoneSize(context).adaptHeight(20),
                     ),
                     cartItems.isEmpty
                         ? Text(
                             'Currently you do not have any orders',
                             style: TextStyle(
-                                fontSize: PhoneSize(context).adaptFontSize(18),
-                                fontWeight: FontWeight.bold),
+                                fontSize: PhoneSize(context).adaptFontSize(20),
+                               ),
                           )
                         :
                         // Your order form fields here
@@ -398,7 +398,7 @@ class _OrderPageState extends State<OrderPage> {
                       children: [
                         Text(
                           'Select Payment Method:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
                         ),
                         RadioListTile<String>(
                           title: Text('Pay after delivery'),
