@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+import 'package:well_connect_app/components/Ui.dart';
 
 class Thankyoupage extends StatefulWidget {
   const Thankyoupage({super.key});
@@ -32,8 +32,8 @@ class _ThankyoupageState extends State<Thankyoupage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
     return Scaffold(
-    
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -46,28 +46,24 @@ class _ThankyoupageState extends State<Thankyoupage> {
                   height: 150,
                 ),
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(20),
-              ),
+              SizedBox(height: screenUi.scaleHeight(20.0)),
               Center(
                 child: Text(
                   "Thank You for choosing Us",
                   style: TextStyle(
-                    fontSize: PhoneSize(context).adaptFontSize(30),
-                    fontWeight: FontWeight.bold, // Attractive color
+                    fontSize: screenUi
+                        .scaleWidth(16.0), // Adjusted font size for better fit
                   ),
                 ),
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(10),
-              ),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
               Center(
                 child: Text(
                   "You'll receive your order Shortly",
                   style: TextStyle(
-                      fontSize: PhoneSize(context).adaptFontSize(16),
-
-                      ),
+                    fontSize: screenUi
+                        .scaleWidth(16.0), // Adjusted font size for better fit
+                  ),
                 ),
               ),
             ],

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+
+import 'package:well_connect_app/components/Ui.dart';
 import 'package:well_connect_app/pages/Maps.dart';
 
 class PharmacyDetailsPage extends StatelessWidget {
@@ -13,6 +14,7 @@ class PharmacyDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff2b4260),
@@ -21,99 +23,120 @@ class PharmacyDetailsPage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-     body: SingleChildScrollView(
-  child: Padding(
-    padding: const EdgeInsets.all(10.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Name: ${pharmacyData['name']}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Maps(
-                              pharmacyLocation: pharmacyData['location'],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(screenUi.scaleWidth(16.0)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(screenUi.scaleWidth(10.0)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Name: ${pharmacyData['name']}",
+                            style: TextStyle(
+                              fontSize: screenUi.scaleFontSize(16.0),
+                              color: Color(0xff2b4260),
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        );
-                      },
-                      icon: Icon(Icons.location_on, color: Colors.blue),
-                      label: Text(
-                        'View in Map',
-                        style: TextStyle(color: Colors.blue),
+                          TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Maps(
+                                    pharmacyLocation: pharmacyData['location'],
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.location_on, color: Colors.red),
+                            label: Text(
+                              '',
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      SizedBox(height: screenUi.scaleHeight(10.0)),
+                      Text(
+                        "Location: ${pharmacyData['location']}",
+                        style: TextStyle(
+                          fontSize: screenUi.scaleFontSize(14.0),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 8.0),
-                Text(
-                  "Location: ${pharmacyData['location']}",
-                  style: TextStyle(fontSize: 14.0),
+              ),
+              SizedBox(height: screenUi.scaleHeight(20.0)),
+              Text(
+                "Available NCD medicines",
+                style: TextStyle(
+                  fontSize: screenUi.scaleFontSize(18.0),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
+              _buildMedicineTable(pharmacyData['medicines'], context),
+            ],
           ),
         ),
-        SizedBox(height: 20.0),
-        Text(
-          "Available NCD Medicines",
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 20.0),
-        _buildMedicineTable(pharmacyData['medicines'], context),
-      ],
-    ),
-  ),
-),
-
+      ),
     );
   }
 
   Widget _buildMedicineTable(List<dynamic>? medicines, BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
     if (medicines == null || medicines.isEmpty) {
       return Container(
-        margin: EdgeInsets.only(top: 100),
-        child: Center(child: Text('No NCD medicines available',style: TextStyle(color: Colors.red,fontSize: 18),)));
+          margin: EdgeInsets.only(top: 100),
+          child: Center(
+              child: Text(
+            'No NCD medicines available',
+            style: TextStyle(
+              fontSize: screenUi.scaleFontSize(18.0),
+              color: Colors.red,
+            ),
+          )));
     }
 
     return DataTable(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
-
       ),
       columns: const [
-        DataColumn(label: Text('Image', style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(label: Text('Medicine', style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(label: Text('Category', style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(label: Text('Price Tz', style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(
+            label:
+                Text('Image', style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(
+            label: Text('Medicine',
+                style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(
+            label: Text('Category',
+                style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(
+            label: Text('Price Tz',
+                style: TextStyle(fontWeight: FontWeight.bold))),
       ],
-      rows: medicines.map((medicine) => _medicineDataRow(medicine, context)).toList(),
+      rows: medicines
+          .map((medicine) => _medicineDataRow(medicine, context))
+          .toList(),
     );
   }
 
-  DataRow _medicineDataRow(Map<String, dynamic> medicine, BuildContext context) {
+  DataRow _medicineDataRow(
+      Map<String, dynamic> medicine, BuildContext context) {
     return DataRow(
       cells: [
         DataCell(ClipOval(
@@ -146,26 +169,41 @@ class PharmacyDetailsPage extends StatelessWidget {
     );
   }
 
-  void _showConfirmationDialog(BuildContext context, Map<String, dynamic> medicine) {
+  void _showConfirmationDialog(
+      BuildContext context, Map<String, dynamic> medicine) {
+    ScreenUi screenUi = ScreenUi(context);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Add to Cart'),
-          content: Text('Do you want to add ${medicine['medicine_name']} to your cart?'),
+          content: Text(
+            'Do you want to add ${medicine['medicine_name']} to your cart?',
+            style: TextStyle(
+              fontSize: screenUi.scaleFontSize(16.0),
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: Text('Cancel',  style: TextStyle(
+                              fontSize: screenUi.scaleFontSize(16.0),
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),),
             ),
             TextButton(
               onPressed: () {
                 _addToCart(medicine);
                 Navigator.of(context).pop(true);
               },
-              child: Text('OK'),
+              child: Text('OK',  style: TextStyle(
+                              fontSize: screenUi.scaleFontSize(16.0),
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),),
             ),
           ],
         );

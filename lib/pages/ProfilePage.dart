@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'dart:convert';
+
+import 'package:well_connect_app/components/Ui.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -48,7 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
       'gender': _selectedGender ?? '',
     };
 
-    final result = await Api().postProfileUpdateData(route: '/auth/updateProfile', data: data);
+    final result = await Api()
+        .postProfileUpdateData(route: '/auth/updateProfile', data: data);
     final response = jsonDecode(result.body);
     print(response['status']);
     print(response['data']);
@@ -69,35 +72,37 @@ class _ProfilePageState extends State<ProfilePage> {
       // Registration failed
       print('Failed to update: ${response['message']}');
       // Show error message
-        String errorMessage = '';
-        int errorNumber = 1;
-        response['error'].forEach((field, errors) {
+      String errorMessage = '';
+      int errorNumber = 1;
+      response['error'].forEach((field, errors) {
         errors.forEach((error) {
-        errorMessage += '$errorNumber. $error \n';
-        errorNumber++;
-  });
-});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('update failed:\n $errorMessage'),
-            backgroundColor: Colors.red,
-          ),
-        );
+          errorMessage += '$errorNumber. $error \n';
+          errorNumber++;
+        });
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('update failed:\n $errorMessage'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor:Color(0xff2b4260),
+        backgroundColor: Color(0xff2b4260),
         title: Text(
-          'Profile update',style: TextStyle(color: Colors.white),
+          'Profile update',
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -105,13 +110,11 @@ class _ProfilePageState extends State<ProfilePage> {
               Text(
                 "Users Address",
                 style: TextStyle(
-                  fontSize: PhoneSize(context).adaptFontSize(25),
+                  fontSize: screenUi.scaleFontSize(20.0),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptFontSize(10),
-              ),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
               Row(
                 children: [
                   Expanded(
@@ -129,7 +132,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       readOnly: true,
                     ),
                   ),
-                  SizedBox(width: PhoneSize(context).adaptHeight(10)), // Spacing between TextFields
+                  SizedBox(
+                      width: screenUi
+                          .scaleHeight(10.0)), // Spacing between TextFields
                   Expanded(
                     flex: 1,
                     child: DropdownButtonFormField<String>(
@@ -157,9 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(10),
-              ),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
               Row(
                 children: [
                   Expanded(
@@ -175,7 +178,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           _firstNameController, // Add your controller if needed
                     ),
                   ),
-                  SizedBox(width: PhoneSize(context).adaptHeight(10)), // Spacing between TextFields
+                  SizedBox(
+                      width: screenUi
+                          .scaleHeight(10.0)), // Spacing between TextFields
                   Expanded(
                     child: TextFormField(
                       decoration: InputDecoration(
@@ -191,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
               Row(
                 children: [
                   Expanded(
@@ -207,7 +212,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           _streetController, // Add your controller if needed
                     ),
                   ),
-                  SizedBox(width: PhoneSize(context).adaptHeight(10)), // Spacing between TextFields
+                  SizedBox(
+                      width: screenUi
+                          .scaleHeight(10.0)), // Spacing between TextFields
                   Expanded(
                     child: TextFormField(
                       decoration: InputDecoration(
@@ -223,9 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(10),
-              ),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Country',
@@ -238,9 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 controller: _countryController,
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(10),
-              ),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Phone number',
@@ -253,28 +256,33 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 controller: _phoneNumberController,
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(20),
-              ),
+              SizedBox(height: screenUi.scaleHeight(20.0)),
               ElevatedButton(
                 onPressed: () {
                   _updateProfile();
                 },
-                child: Text("Update profile",  style: TextStyle(
+                child: Text(
+                  "Update profile",
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontSize: PhoneSize(context).adaptFontSize(20),
-                  ),),
-                 style: ElevatedButton.styleFrom(
+                    fontSize: screenUi
+                        .scaleWidth(16.0), // Adjusted font size for better fit
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xff2b4260),
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenUi.scaleHeight(12.0),
+                  ), // Adjusted padding
                   minimumSize: Size(
-                    MediaQuery.of(context).size.width * 0.8,
+                    screenUi.scaleWidth(screenUi.screenWidth() * 0.8),
                     0,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
-                  ),
+                    borderRadius:
+                        BorderRadius.circular(screenUi.scaleHeight(0)),
+                  ), // Adjusted border radius
                 ),
               ),
             ],

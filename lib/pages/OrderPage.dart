@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:well_connect_app/components/Ui.dart';
 import 'package:well_connect_app/pages/FlutterWavePayment.dart';
 import 'package:well_connect_app/pages/ThankYouPage.dart';
 import 'package:well_connect_app/pages/user_list_page.dart';
@@ -270,6 +271,8 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -290,11 +293,21 @@ class _OrderPageState extends State<OrderPage> {
                   items: [
                     PopupMenuItem<String>(
                       value: 'Order status',
-                      child: Text('Order status'),
+                      child: Text(
+                        'Order status',
+                        style: TextStyle(
+                          fontSize: screenUi.scaleFontSize(16.0),
+                        ),
+                      ),
                     ),
                     PopupMenuItem<String>(
                       value: 'Order History',
-                      child: Text('Order history'),
+                      child: Text(
+                        'Order history',
+                        style: TextStyle(
+                          fontSize: screenUi.scaleFontSize(16.0),
+                        ),
+                      ),
                     ),
                   ],
                   elevation: 8.0,
@@ -315,16 +328,16 @@ class _OrderPageState extends State<OrderPage> {
         body: cartItems.isEmpty
             ? Center(
                 child: Text(
-                  'Currently you do not have any orders',
+                  'You do not have any order',
                   style: TextStyle(
-                    fontSize: PhoneSize(context).adaptFontSize(25),
-                  ),
+                      fontSize: screenUi.scaleFontSize(18.0),
+                      color: Colors.red),
                 ),
               )
             : SingleChildScrollView(
                 child: Center(
                   child: Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(screenUi.scaleWidth(16.0)),
                     child: Column(
                       children: [
                         SingleChildScrollView(
@@ -334,14 +347,14 @@ class _OrderPageState extends State<OrderPage> {
                               onPressed: _pickFile,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xff2b4260),
-                                padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 10),
-                              
+                                padding: EdgeInsets.symmetric(
+                                    vertical: screenUi.scaleWidth(10.0),
+                                    horizontal: screenUi.scaleWidth(10.0)),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(0),
                                 ),
                               ),
                               child: Row(
-
                                 children: [
                                   Icon(
                                     Icons.attach_file,
@@ -351,17 +364,16 @@ class _OrderPageState extends State<OrderPage> {
                                     fileSelected
                                         ? fileName
                                         : 'Upload prescription',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: screenUi.scaleFontSize(15.0)),
                                   ), // Display file name if selected, otherwise default text
                                 ],
                               ),
                             ),
                           ]),
                         ),
-                        SizedBox(
-                          height: PhoneSize(context).adaptHeight(20),
-                        ),
-
+                        SizedBox(height: screenUi.scaleHeight(10.0)),
                         // Your order form fields here
                         ListView.builder(
                           shrinkWrap: true,
@@ -370,7 +382,14 @@ class _OrderPageState extends State<OrderPage> {
                           itemBuilder: (context, index) {
                             return Card(
                               child: ListTile(
-                                title: Text(cartItems[index]['pharmacyName']),
+                                title: Text(
+                                  cartItems[index]['pharmacyName'],
+                                  style: TextStyle(
+                                    fontSize: screenUi.scaleFontSize(16.0),
+                                    color: Color(0xff2b4260),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -385,27 +404,34 @@ class _OrderPageState extends State<OrderPage> {
                                   ],
                                 ),
                                 trailing: IconButton(
-                                  icon: Icon(Icons.delete,color: Colors.red,),
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
                                   onPressed: () => deleteCartItem(index),
                                 ),
                               ),
                             );
                           },
                         ),
-                        SizedBox(
-                          height: PhoneSize(context).adaptHeight(10),
-                        ),
+                        SizedBox(height: screenUi.scaleHeight(10.0)),
                         // Payment options
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Select Payment Method:',
+                              'Select payment method:',
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: screenUi.scaleFontSize(18.0)),
                             ),
                             RadioListTile<String>(
-                              title: Text('Pay after delivery'),
+                              title: Text(
+                                'Pay after delivery',
+                                style: TextStyle(
+                                  fontSize: screenUi.scaleFontSize(16.0),
+                                ),
+                              ),
                               value: 'Pay after delivery',
                               groupValue: selectedPaymentMethod,
                               onChanged: (value) {
@@ -415,7 +441,12 @@ class _OrderPageState extends State<OrderPage> {
                               },
                             ),
                             RadioListTile<String>(
-                              title: Text('Pay online before delivery'),
+                              title: Text(
+                                'Pay online before delivery',
+                                style: TextStyle(
+                                  fontSize: screenUi.scaleFontSize(16.0),
+                                ),
+                              ),
                               value: 'Pay online before delivery',
                               groupValue: selectedPaymentMethod,
                               onChanged: (value) {
@@ -427,16 +458,15 @@ class _OrderPageState extends State<OrderPage> {
                           ],
                         ),
                         // Button to pick files
-                        SizedBox(
-                          height: PhoneSize(context).adaptHeight(10),
-                        ),
-
+                        SizedBox(height: screenUi.scaleHeight(10.0)),
                         // Place order button
                         ElevatedButton(
                           onPressed: _completePaymentAndPlaceOrder,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xff2b4260),
-                            padding: EdgeInsets.symmetric(vertical: 15.0),
+                            padding: EdgeInsets.symmetric(
+                              vertical: screenUi.scaleHeight(12.0),
+                            ), //
                             minimumSize: Size(
                               MediaQuery.of(context).size.width * 0.9,
                               0,
@@ -453,7 +483,9 @@ class _OrderPageState extends State<OrderPage> {
                               : Text(
                                   'Complete payments & place order',
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
+                                    color: Colors.white,
+                                    fontSize: screenUi.scaleWidth(16.0),
+                                  ),
                                 ),
                         ),
                       ],
