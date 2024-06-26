@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'package:well_connect_app/components/PharmacyCard.dart';
+import 'package:well_connect_app/components/Ui.dart';
 import 'package:well_connect_app/pages/PharmacyDetailsPage.dart';
 import 'dart:convert';
 import 'dart:async';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+
 import 'package:well_connect_app/pages/ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
@@ -211,6 +212,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
+    
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -233,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                             child: Text(
                               'Click here! to complete registration',
                               style:
-                                  TextStyle(fontSize: 15, color: Colors.red),
+                                  TextStyle(fontSize: screenUi.scaleFontSize(15.0), color: Colors.red),
                             ),
                           ),
                         ],
@@ -257,8 +260,8 @@ class _HomePageState extends State<HomePage> {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(6.0),
-                    bottomRight: Radius.circular(6.0),
+                    bottomLeft: Radius.circular(18.0),
+                    bottomRight: Radius.circular(18.0),
                   ),
                   color: Color(0xff2b4260),
                   boxShadow: [
@@ -270,7 +273,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,27 +281,26 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       "Welcome to",
                       style: TextStyle(
-                        fontSize: PhoneSize(context).adaptFontSize(25),
+                     fontSize: screenUi.scaleFontSize(25.0),
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(
-                      height: PhoneSize(context).adaptHeight(10),
-                    ),
+                    SizedBox(height: screenUi.scaleHeight(8.0)),
                     Text(
                       "Well-Connect",
                       style: TextStyle(
-                        fontSize: PhoneSize(context).adaptFontSize(45),
+                        fontSize: screenUi.scaleFontSize(40.0),
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
+                      SizedBox(height: screenUi.scaleHeight(16.0)),
                   ],
                 ),
               ),
               Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  padding: EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0), vertical: screenUi.scaleWidth(18.0)),
                   child: TextFormField(
                     onChanged: (value) {
                       setState(() {
@@ -346,20 +348,18 @@ class _HomePageState extends State<HomePage> {
                 ),
 
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
                 child: Text(
-                  "View Pharmacies",
+                  "Available Pharmacies",
                   style: TextStyle(
-                    fontSize: PhoneSize(context).adaptFontSize(25),
+                    fontSize: screenUi.scaleFontSize(20.0),
                   ),
                 ),
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(10),
-              ),
+             SizedBox(height: screenUi.scaleHeight(5.0)),
               Container(
-                height: PhoneSize(context)
-                    .adaptHeight(300), // Adjust height as needed
+                 height: screenUi
+                        .scaleWidth(250.0),  // Adjust height as needed
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: _scrollController,
@@ -370,7 +370,7 @@ class _HomePageState extends State<HomePage> {
                       name: pharmacy['name'] ??
                           'Unknown', // Use 'Unknown' if name is null
                       image:
-                          'http://192.168.137.197:8000/productimage/${pharmacy['image']}',
+                          'http://192.168.43.109:8000/productimage/${pharmacy['image']}',
                       distance: pharmacy['distance'] != null
                           ? '${pharmacy['distance']} km'
                           : 'Distance unavailable',
@@ -385,22 +385,20 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
-              SizedBox(
-                height: PhoneSize(context).adaptHeight(10),
-              ),
+
               Container(
-                padding: EdgeInsets.all(PhoneSize(context).adaptHeight(10)),
+                padding: EdgeInsets.all(screenUi.scaleWidth(16.0)),
                 child: Text(
                   "Health assesment",
                   style: TextStyle(
-                    fontSize: PhoneSize(context).adaptFontSize(25),
+                     fontSize: screenUi.scaleFontSize(20.0),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding:  EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  padding: EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(5.0), vertical: screenUi.scaleWidth(5.0)),
                   color: Color(0xff2b4260)
                       .withOpacity(0.1), // Faint gray background
                   child: TextButton(
@@ -415,7 +413,7 @@ class _HomePageState extends State<HomePage> {
                           "take NCD risk test",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: PhoneSize(context).adaptFontSize(20),
+                         fontSize: screenUi.scaleFontSize(18.0),
                           ),
                         ),
                         Icon(

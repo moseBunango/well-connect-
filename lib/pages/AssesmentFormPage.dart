@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'package:well_connect_app/components/API/Api.dart';
+import 'package:well_connect_app/components/Ui.dart';
 import 'dart:convert';
 import 'dart:async';
 
@@ -139,6 +140,7 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -149,7 +151,7 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
         elevation: 0.0, // Remove shadow
       ),
       body: Padding(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(screenUi.scaleWidth(16.0)),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -157,12 +159,11 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
               Text(
                 "Task to be filled",
                 style: TextStyle(
-                  fontSize: 25.0,
+                  fontSize: screenUi.scaleFontSize(25.0),
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'Roboto', // or any other desired font family
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
 
               // Form fields with improved layout
               Form(
@@ -172,61 +173,56 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Age',
-                        hintText: 'Enter your age',
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
                       controller: ageController,
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: screenUi.scaleHeight(10.0)),
 
                     // Weight field
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Weight (kg)',
-                        hintText: 'Enter your weight',
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
                       controller: weightController,
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: screenUi.scaleHeight(10.0)),
 
                     // Height field
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Height (ft)',
-                        hintText: 'Enter your height',
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
                       controller: heightController,
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: screenUi.scaleHeight(10.0)),
 
                     // Blood pressure field
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Blood Pressure (mmHg)',
-                        hintText: 'e.g. 60/40',
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
                       controller: bloodPressureController,
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: screenUi.scaleHeight(10.0)),
 
                     // Blood sugar field
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Blood Sugar Level (mmol/L)',
-                        hintText: 'Enter sugar level',
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
                       controller: bloodSugarController,
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: screenUi.scaleHeight(10.0)),
 
                     // Description field with a modern multi-line TextForm
                     TextFormField(
@@ -237,7 +233,7 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: screenUi.scaleHeight(10.0)),
                   ],
                 ),
               ),
@@ -254,16 +250,23 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontSize: PhoneSize(context).adaptFontSize(20),
+                          fontSize: screenUi.scaleWidth(
+                              16.0), // Adjusted font size for better fit
                         ),
                       ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(
-                      0xff2b4260), // Use primary color for better theme integration
-                  minimumSize: Size(double.infinity, 50.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
+                  backgroundColor: Color(0xff2b4260),
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenUi.scaleHeight(12.0),
+                  ), // Adjusted padding
+                  minimumSize: Size(
+                    screenUi.scaleWidth(screenUi.screenWidth() * 0.8),
+                    0,
                   ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(screenUi.scaleHeight(0)),
+                  ), // Adjusted border radius
                 ),
               ),
             ],

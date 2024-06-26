@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+import 'package:well_connect_app/components/Ui.dart';
 
 class MedicineListsPage extends StatefulWidget {
   final Map<String, dynamic> medicineData;
@@ -16,32 +16,36 @@ class MedicineListsPage extends StatefulWidget {
 
 class _MedicineListsPageState extends State<MedicineListsPage> {
   Future<bool> _onWillPop() async {
-  bool shouldLogout = await showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Confirm Exit'),
-      content: Text('Do you really want to exit?'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text('No'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text('Yes'),
-        ),
-      ],
-    ),
-  );
-  return shouldLogout ;
-}
+    bool shouldLogout = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Exit'),
+        content: Text('Do you really want to exit?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    );
+    return shouldLogout;
+  }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff2b4260),
-        title: Text(widget.medicineData['medicine_name'],style: TextStyle(color: Colors.white),),
+        title: Text(
+          widget.medicineData['medicine_name'],
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         // Allow scrolling if content overflows
@@ -51,9 +55,9 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
             crossAxisAlignment:
                 CrossAxisAlignment.start, // Align content to left
             children: [
-             SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-               child: Container(
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Color(0xff2b4260),
@@ -62,49 +66,44 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        children:[ 
-                          Text(
-                          "Name: ${widget.medicineData['medicine_name']}",
+                      Column(children: [
+                        Text("Name: ${widget.medicineData['medicine_name']}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenUi.scaleFontSize(18.0),
+                                color: Colors.white)),
+                        SizedBox(height: screenUi.scaleHeight(10.0)),
+                        Text(
+                          "Price: TZS${widget.medicineData['price']}/=",
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: PhoneSize(context).adaptFontSize(18),
-                            color: Colors.white,
-                          ),
-                        ), 
-                      SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                      Text(
-                        "Price: TZS${widget.medicineData['price']}/=",
-                        style: TextStyle(
-                          color: Colors.white,fontSize: PhoneSize(context).adaptFontSize(18)
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenUi.scaleFontSize(18.0),
+                              color: Colors.white),
                         ),
-                      ),
                       ]),
-                      Column(
-                        children:[ Text(
-                          "Category: ${widget.medicineData['category']}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,fontSize: PhoneSize(context).adaptFontSize(18)
-                          ),
-                        ),
-                        SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                      Column(children: [
+                        Text("Category: ${widget.medicineData['category']}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenUi.scaleFontSize(18.0),
+                                color: Colors.white)),
+                        SizedBox(height: screenUi.scaleHeight(10.0)),
                         Text("")
-                    ]),
+                      ]),
                     ],
                   ),
                 ),
-             ),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
+              ),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
               Text(
                 "Available NCD Medicines",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: PhoneSize(context).adaptHeight(10)),
+              SizedBox(height: screenUi.scaleHeight(10.0)),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: _buildMedicineTable(
-                    [widget.medicineData], context), // Call medicine table builder
+                child: _buildMedicineTable([widget.medicineData],
+                    context), // Call medicine table builder
               ), // Call medicine table builder
             ],
           ),
@@ -115,7 +114,7 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
 
   Widget _buildMedicineTable(
       List<Map<String, dynamic>> medicineData, BuildContext context) {
-        int counter = 1;
+    int counter = 1;
     return DataTable(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -123,11 +122,23 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
       ),
       columnSpacing: 35,
       columns: [
-        DataColumn(label: Text('No',style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(label: Text('Pharmacy Name',style: TextStyle(fontWeight: FontWeight.bold ),)),
-        DataColumn(label: Text('Location',style: TextStyle(fontWeight: FontWeight.bold ),)),
-        DataColumn(label: Text('Distance',style: TextStyle(fontWeight: FontWeight.bold
-                      ),)),
+        DataColumn(
+            label: Text('No', style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(
+            label: Text(
+          'Pharmacy Name',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataColumn(
+            label: Text(
+          'Location',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
+        DataColumn(
+            label: Text(
+          'Distance',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
       ],
       rows: medicineData.expand<DataRow>((medicine) {
         return medicine['pharmacies'].map<DataRow>((pharmacy) {
@@ -141,13 +152,20 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
                       medicine['medicine_name'],
                       pharmacy['name'],
                       pharmacy['location'],
-                      
                       medicine['price'],
                       medicine['category']);
                 },
-                child: Text(pharmacy['name'].toString(),), ), ),
-            DataCell(Text(pharmacy['location'].toString(),)),
-            DataCell(Text(pharmacy['distance'].toString(),)),
+                child: Text(
+                  pharmacy['name'].toString(),
+                ),
+              ),
+            ),
+            DataCell(Text(
+              pharmacy['location'].toString(),
+            )),
+            DataCell(Text(
+              pharmacy['distance'].toString(),
+            )),
           ]);
         }).toList();
       }).toList(),
@@ -160,7 +178,6 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
       String medicineName,
       String pharmacyName,
       String pharmacyLocation,
-      
       String medicinePrice,
       String medicineCategory) {
     showDialog(
@@ -178,14 +195,8 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
             ),
             TextButton(
               onPressed: () {
-                _addToCart(
-                    context,
-                    medicineName,
-                    pharmacyName,
-                    pharmacyLocation,
-                   
-                    medicinePrice,
-                    medicineCategory);
+                _addToCart(context, medicineName, pharmacyName,
+                    pharmacyLocation, medicinePrice, medicineCategory);
                 Navigator.of(context).pop(true);
               },
               child: Text('OK'),
@@ -213,27 +224,27 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
       'medicinePrice': medicinePrice,
       'medicineCategory': medicineCategory
     };
-  
+
     final result = await Api().postToCartData(route: '/addToCart', data: data);
     final response = jsonDecode(result.body);
-    
+
     if (response['status']) {
       // Show registration success banner
       Fluttertoast.showToast(
-  msg: "Added successfully to cart",
-  toastLength: Toast.LENGTH_SHORT,
-  gravity: ToastGravity.BOTTOM,
-  backgroundColor: Colors.green,
-  textColor: Colors.white,
-);
+        msg: "Added successfully to cart",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
     } else {
       Fluttertoast.showToast(
-  msg: "failed to add to cart",
-  toastLength: Toast.LENGTH_SHORT,
-  gravity: ToastGravity.BOTTOM,
-  backgroundColor: Colors.red,
-  textColor: Colors.white,
-);
+        msg: "failed to add to cart",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
   }
 }

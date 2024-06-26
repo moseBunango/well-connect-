@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'dart:convert';
 import 'dart:async';
+
+import 'package:well_connect_app/components/Ui.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -47,7 +49,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     });
   }
 
-  // ignore: unused_field
   bool _isLoggingout = false;
 
   Future<void> logoutUser() async {
@@ -55,11 +56,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
       _isLoggingout = true;
     });
 
-    // Timer to handle timeout
     var timer = Timer(Duration(seconds: 20), () {
       setState(() {
         _isLoggingout = false;
-        _showErrorPage(); // Call function to display error page
+        _showErrorPage();
       });
     });
 
@@ -67,14 +67,8 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     final response = jsonDecode(result.body);
     timer.cancel();
 
-    print(response['status']);
-
     if (response['status']) {
-      // Logout successful
-      print('User logged out successfully');
-      // Navigate to landing page
       Navigator.pushNamed(context, '/LandingPage');
-      // Show registration success banner
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('User logged out successfully!'),
@@ -82,9 +76,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         ),
       );
     } else {
-      // Login failed
-      print('Failed to logout: ${response['message']}');
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Logout failed: ${response['message']}'),
@@ -102,21 +93,14 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     final response = jsonDecode(result.body);
 
     if (response['status']) {
-      // Logout successful
-      print('Account deleted successfully');
-      // Navigate to landing page
       Navigator.pushNamed(context, '/LandingPage');
-      // Show registration success banner
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(' ${response['message']}'),
+          content: Text('${response['message']}'),
           backgroundColor: Colors.green,
         ),
       );
     } else {
-      // Login failed
-      print('Delete failure: ${response['message']}');
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Delete failure: ${response['message']}'),
@@ -127,14 +111,12 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   }
 
   void _showErrorPage() {
-    // Replace this with your actual error page logic
-    // You can display a dialog or navigate to a separate error screen
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Error'),
-          content: Text('request timed out. Please try again.'),
+          content: Text('Request timed out. Please try again.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -145,7 +127,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
       },
     );
   }
-
 
   Future<void> _showDeleteConfirmationDialog() async {
     return showDialog(
@@ -161,7 +142,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             ),
             TextButton(
               onPressed: () {
-                // Call the function to delete account
                 deleteAccount();
                 Navigator.of(context).pop(true);
               },
@@ -174,24 +154,48 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   }
 
   Future<void> _showLogoutConfirmationDialog() async {
+    ScreenUi screenUi = ScreenUi(context);
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Confirm Logout'),
-          content: Text('Are you sure you want to Logout?'),
+          content: Text(
+            'Are you sure you want to Logout?',
+            style: TextStyle(
+
+
+              fontSize: screenUi
+                  .scaleWidth(16.0), // Adjusted font size for better fit
+            ),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                  fontSize: screenUi
+                      .scaleWidth(16.0), // Adjusted font size for better fit
+                ),
+              ),
             ),
             TextButton(
               onPressed: () {
-                // Call the function to delete account
                 logoutUser();
                 Navigator.of(context).pop(true);
               },
-              child: Text('logout'),
+              child: Text(
+                'Logout',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  fontSize: screenUi
+                      .scaleWidth(16.0), // Adjusted font size for better fit
+                ),
+              ),
             ),
           ],
         );
@@ -200,34 +204,61 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   }
 
   Future<bool> _onWillPop() async {
-  bool shouldLogout = await showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Confirm Exit'),
-      content: Text('Do you really want to exit?'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text('No'),
+    ScreenUi screenUi = ScreenUi(context);
+    bool shouldLogout = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Exit'),
+        content: Text(
+          'Do you really want to exit?',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+
+            fontSize:
+                screenUi.scaleWidth(16.0), // Adjusted font size for better fit
+          ),
         ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text('Yes'),
-        ),
-      ],
-    ),
-  );
-  return shouldLogout ;
-}
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(
+              'No',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: screenUi
+                    .scaleWidth(16.0), // Adjusted font size for better fit
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(
+              'Yes',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+                fontSize: screenUi
+                    .scaleWidth(16.0), // Adjusted font size for better fit
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    return shouldLogout;
+  }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Profile Details',style: TextStyle(color: Colors.white),
+            'Profile Details',
+            style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0xff2b4260),
           centerTitle: true,
@@ -235,7 +266,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             IconButton(
               icon: Icon(
                 Icons.delete,
-                color: Colors.teal,
+                color: Colors.red,
               ),
               onPressed: () {
                 _showDeleteConfirmationDialog();
@@ -250,56 +281,66 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  "Contact information",
+                  "Contact Information",
                   style: TextStyle(
-                    fontSize: PhoneSize(context).adaptFontSize(24),
+                    fontSize: screenUi.scaleFontSize(20.0),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField('Email', email),
-                SizedBox(height: 10),
-                _buildDisplayField('User name', username),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
+                SizedBox(height: screenUi.scaleHeight(10.0)),
+                _buildDataRow('Email', email, 'Username', username),
+                SizedBox(height: screenUi.scaleHeight(10.0)),
                 Text(
                   "User's Address",
                   style: TextStyle(
-                    fontSize: PhoneSize(context).adaptFontSize(24),
+                    fontSize: screenUi.scaleFontSize(20.0),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField('First name', firstName),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField('Last name', lastName),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField('Street', street),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField('City', city),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField('Country', country),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField('Phone number', phoneNumber),
-                SizedBox(height: PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField(
+                SizedBox(height: screenUi.scaleHeight(10.0)),
+                _buildDataRow('First Name', firstName, 'Last Name', lastName),
+                SizedBox(height: screenUi.scaleHeight(10.0)),
+                _buildDataRow('Street', street, 'City', city),
+                SizedBox(height: screenUi.scaleHeight(10.0)),
+                _buildDataRow('Country', country, 'Phone Number', phoneNumber),
+                SizedBox(height: screenUi.scaleHeight(10.0)),
+                _buildDataRow(
                   'Date of Birth',
                   dateOfBirth != null
                       ? '${dateOfBirth!.day}/${dateOfBirth!.month}/${dateOfBirth!.year}'
                       : '',
+                  'Gender',
+                  gender,
                 ),
-                SizedBox(height:PhoneSize(context).adaptHeight(10)),
-                _buildDisplayField('Gender', gender),
+                SizedBox(height: screenUi.scaleHeight(20.0)),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/ProfilePage');
                   },
-                  child: Text("Update my information",style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    "Update my information",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: screenUi.scaleWidth(
+                          16.0), // Adjusted font size for better fit
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
+                    backgroundColor: Color(0xff2b4260),
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenUi.scaleHeight(12.0),
+                    ), // Adjusted padding
+                    minimumSize: Size(
+                      screenUi.scaleWidth(screenUi.screenWidth() * 0.8),
+                      0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(screenUi.scaleHeight(0)),
+                    ), // Adjusted border radius
+                  ),
                 ),
-                SizedBox(
-                  height: PhoneSize(context).adaptHeight(10),
-                ),
+                SizedBox(height: screenUi.scaleHeight(10.0)),
                 ElevatedButton(
                   onPressed: () {
                     _showLogoutConfirmationDialog();
@@ -308,10 +349,26 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                       ? CircularProgressIndicator()
                       : Text(
                           "Logout",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: screenUi.scaleWidth(
+                                16.0), // Adjusted font size for better fit
+                          ),
                         ),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red, padding: EdgeInsets.all(15.0)),
+                    backgroundColor: Colors.red,
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenUi.scaleHeight(12.0),
+                    ), // Adjusted padding
+                    minimumSize: Size(
+                      screenUi.scaleWidth(screenUi.screenWidth() * 0.8),
+                      0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(screenUi.scaleHeight(0)),
+                    ), // Adjusted border radius
+                  ),
                 ),
               ],
             ),
@@ -319,6 +376,21 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         ),
         bottomNavigationBar: BottomNavigation(),
       ),
+    );
+  }
+
+  Widget _buildDataRow(
+      String label1, String? value1, String label2, String? value2) {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildDisplayField(label1, value1),
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: _buildDisplayField(label2, value2),
+        ),
+      ],
     );
   }
 

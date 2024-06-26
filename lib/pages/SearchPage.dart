@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
 import 'package:well_connect_app/components/BottomNavigation.dart';
+import 'package:well_connect_app/components/Ui.dart';
 import 'package:well_connect_app/pages/MedicineListPage.dart';
 import 'dart:convert';
 
@@ -146,6 +147,8 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+     ScreenUi screenUi = ScreenUi(context);
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -158,13 +161,11 @@ class _SearchPageState extends State<SearchPage> {
           centerTitle: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(screenUi.scaleWidth(16.0)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
-                height: 10,
-              ),
+             SizedBox(height: screenUi.scaleHeight(10.0)),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(0),
@@ -205,7 +206,7 @@ class _SearchPageState extends State<SearchPage> {
                         tileColor: Color(0xff2b4260).withOpacity(0.1),
                         title: Text(
                           medicine['medicine_name'],
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: screenUi.scaleFontSize(20.0)),
                         ),
                         onTap: () {
                           // Navigate to medicine details page
@@ -222,19 +223,16 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
 
-              SizedBox(
-                height: 20,
-              ),
+             SizedBox(height: screenUi.scaleHeight(20.0)),
               Text(
                 "Filte by",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: screenUi.scaleFontSize(25.0), fontWeight: FontWeight.bold),
               ),
               Text(
                 "Categories",
+                style: TextStyle(fontSize: screenUi.scaleFontSize(15.0)),
               ),
-              SizedBox(
-                height: 10,
-              ),
+             SizedBox(height: screenUi.scaleHeight(10.0)),
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,

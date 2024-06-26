@@ -55,7 +55,7 @@ void _onItemTapped(int index) {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Shopping',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
              icon: Icon(Icons.search),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+
 import 'package:well_connect_app/components/BottomNavigation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:well_connect_app/components/Ui.dart';
 import 'package:well_connect_app/pages/ThankYouPage.dart';
-
 
 class CompleetingOrder extends StatefulWidget {
   const CompleetingOrder({super.key});
@@ -17,7 +17,6 @@ class CompleetingOrder extends StatefulWidget {
 }
 
 class _CompleetingOrderState extends State<CompleetingOrder> {
-
   String fileName = '';
   String fileFullPath = "";
   bool fileSelected = false;
@@ -38,12 +37,12 @@ class _CompleetingOrderState extends State<CompleetingOrder> {
       });
     }
   }
+
   @override
   void initState() {
     super.initState();
     fetchCartData();
   }
-
 
   Future<void> fetchCartData() async {
     // Call your API to fetch pharmacies
@@ -119,10 +118,10 @@ class _CompleetingOrderState extends State<CompleetingOrder> {
           textColor: Colors.white,
         );
         await moveCartsToOrderHistory();
-         Navigator.push(
+        Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>Thankyoupage()),
-          );
+          MaterialPageRoute(builder: (context) => Thankyoupage()),
+        );
       } else {
         throw Exception(response['message'] ?? 'Failed to place order');
       }
@@ -172,7 +171,6 @@ class _CompleetingOrderState extends State<CompleetingOrder> {
     }
   }
 
- 
   void _showErrorPage() {
     // You can display a dialog or navigate to a separate error screen
     showDialog(
@@ -191,14 +189,17 @@ class _CompleetingOrderState extends State<CompleetingOrder> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff2b4260),
         centerTitle: true,
         title: Text(
-          'Order',style: TextStyle(color: Colors.white),
+          'Order',
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -234,16 +235,13 @@ class _CompleetingOrderState extends State<CompleetingOrder> {
                         ),
                       ]),
                 ),
-                SizedBox(
-                  height: PhoneSize(context).adaptHeight(10),
-                ),
+                SizedBox(height: screenUi.scaleHeight(10.0)),
                 cartItems.isEmpty
-                    ? Text(
-                        'Currently you do not have any orders any orders',
+                    ? Text('Currently you do not have any orders any orders',
                         style: TextStyle(
-                            fontSize: PhoneSize(context).adaptFontSize(18),
-                            fontWeight: FontWeight.bold),
-                      )
+                          fontWeight: FontWeight.bold,
+                          fontSize: screenUi.scaleFontSize(18.0),
+                        ))
                     :
                     // Your order form fields here
                     ListView.builder(
@@ -275,13 +273,8 @@ class _CompleetingOrderState extends State<CompleetingOrder> {
                           );
                         },
                       ),
-                SizedBox(
-                  height: PhoneSize(context).adaptHeight(10),
-                ),
+                SizedBox(height: screenUi.scaleHeight(20.0)),
                 // Button to pick files
-                SizedBox(
-                  height: PhoneSize(context).adaptHeight(10),
-                ),
 
                 // Place order button
                 ElevatedButton(
@@ -297,7 +290,8 @@ class _CompleetingOrderState extends State<CompleetingOrder> {
                           valueColor: AlwaysStoppedAnimation(Colors.teal),
                         )
                       : Text(
-                          'place order',style: TextStyle(color: Colors.white),
+                          'place order',
+                          style: TextStyle(color: Colors.white),
                         ),
                 ),
               ],

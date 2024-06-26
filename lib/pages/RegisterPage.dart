@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:well_connect_app/components/API/Api.dart';
-import 'package:well_connect_app/components/API/PhoneSize.dart';
+
 import 'dart:convert';
 import 'dart:async';
+
+import 'package:well_connect_app/components/Ui.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -121,9 +123,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUi screenUi = ScreenUi(context);
+
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(screenUi.scaleWidth(16.0)),
         child: Center(
           child: SingleChildScrollView(
             child: Form(
@@ -131,42 +135,36 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                    Center(
+                  Center(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius:
+                          BorderRadius.circular(screenUi.scaleWidth(10.0)),
                       child: Image.asset(
                         "lib/assets/WC.png",
-                        height: PhoneSize(context).adaptHeight(80),
-                        fit: BoxFit.cover, // Adjust image scaling
+                        height: screenUi.scaleHeight(60.0),
+                        fit: BoxFit.cover,
                       ),
-                      
                     ),
                   ),
+                  SizedBox(height: screenUi.scaleHeight(8.0)),
                   Center(
                     child: Text(
                       "Register",
                       style: TextStyle(
-                        fontSize: PhoneSize(context).adaptFontSize(35),
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff2b4260),
-                      ),
+                          fontSize: screenUi.scaleFontSize(30.0),
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
+                  SizedBox(height: screenUi.scaleHeight(10.0)),
                   Text(
                     "Simplify your NCD medication ordering process and perform health assessment to analyze your NCD risk",
                     style: TextStyle(
-                      fontSize: PhoneSize(context).adaptFontSize(20),
-
+                      fontSize: screenUi.scaleFontSize(16.0),
                       color: Colors.grey[600],
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(30),
-                  ),
+                  SizedBox(height: screenUi.scaleHeight(20.0)),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Name',
@@ -188,9 +186,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       return null;
                     },
                   ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(20),
-                  ),
+                  SizedBox(height: screenUi.scaleHeight(10.0)),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Email',
@@ -212,9 +208,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       return null;
                     },
                   ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(20),
-                  ),
+                  SizedBox(height: screenUi.scaleHeight(10.0)),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -250,9 +244,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       return null;
                     },
                   ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(20),
-                  ),
+                  SizedBox(height: screenUi.scaleHeight(10.0)),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Password confirmation',
@@ -278,7 +270,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       return null;
                     },
                   ),
-                  SizedBox(height: PhoneSize(context).adaptHeight(20.0)),
+                  SizedBox(height: screenUi.scaleHeight(20.0)),
                   ElevatedButton(
                     onPressed: () {
                       registerUser();
@@ -286,31 +278,34 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: _isRegistering
                         ? CircularProgressIndicator()
                         : Text("Register",
-                            style: TextStyle(color: Colors.white,fontSize: 20)),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: screenUi.scaleFontSize(18.0))),
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Color(0xff2b4260)),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.all(PhoneSize(context).adaptHeight(15.0)),
+                        EdgeInsets.all(screenUi.scaleHeight(12.0)),
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              PhoneSize(context).adaptHeight(0)),
+                          borderRadius: BorderRadius.circular(0),
                         ),
                       ),
                       overlayColor:
                           MaterialStateProperty.all<Color>(Colors.teal),
                     ),
                   ),
-                  SizedBox(height: PhoneSize(context).adaptHeight(10.0)),
+                  SizedBox(height: screenUi.scaleHeight(10.0)),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/LogInPage');
                     },
                     child: Text(
                       "Already have an Account? Login",
-                      style: TextStyle(color: Colors.grey[600],fontSize: 18),
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: screenUi.scaleFontSize(18.0)),
                     ),
                   ),
                 ],
