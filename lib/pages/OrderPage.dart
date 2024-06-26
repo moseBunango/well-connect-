@@ -120,10 +120,10 @@ class _OrderPageState extends State<OrderPage> {
           textColor: Colors.white,
         );
         await moveCartsToOrderHistory();
-         Navigator.push(
+        Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>Thankyoupage()),
-          );
+          MaterialPageRoute(builder: (context) => Thankyoupage()),
+        );
       } else {
         throw Exception(response['message'] ?? 'Failed to place order');
       }
@@ -185,16 +185,16 @@ class _OrderPageState extends State<OrderPage> {
     }
 
     // Check if a prescription file is selected
-  if (!fileSelected) {
-    Fluttertoast.showToast(
-      msg: "Please upload a prescription",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
-    return; // Return without proceeding if no prescription is selected
-  }
+    if (!fileSelected) {
+      Fluttertoast.showToast(
+        msg: "Please upload a prescription",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return; // Return without proceeding if no prescription is selected
+    }
 
     setState(() {
       _isLoading = true; // Show loader when button is pressed
@@ -216,18 +216,16 @@ class _OrderPageState extends State<OrderPage> {
         _isLoading = false; // Hide loader after payment and order attempt
       });
     } else if (selectedPaymentMethod == 'Pay online before delivery') {
-      
-          // Navigate to the FlutterwavePayment page
-          Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FlutterwavePayment()),
-          );
-          timer.cancel();
-          setState(() {
-            _isLoading = false; // Hide loader after payment and order attempt
-          });
-        
-      }
+      // Navigate to the FlutterwavePayment page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => FlutterwavePayment()),
+      );
+      timer.cancel();
+      setState(() {
+        _isLoading = false; // Hide loader after payment and order attempt
+      });
+    }
   }
 
   void _showErrorPage() {
@@ -250,206 +248,220 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Future<bool> _onWillPop() async {
-  bool shouldLogout = await showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Confirm Exit'),
-      content: Text('Do you really want to exit?'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text('No'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text('Yes'),
-        ),
-      ],
-    ),
-  );
-  return shouldLogout ;
-}
+    bool shouldLogout = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Exit'),
+        content: Text('Do you really want to exit?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    );
+    return shouldLogout;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return  WillPopScope(
+    return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Color(0xff2b4260),
-            centerTitle: true,
-            title: Text(
-              'Order',style: TextStyle(color: Colors.white),
-            ),
-            actions: [
-            TextButton(
+        appBar: AppBar(
+          backgroundColor: Color(0xff2b4260),
+          centerTitle: true,
+          title: Text(
+            'Order',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.more_vert, color: Colors.white),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UserListPage()),
-                );
+                showMenu(
+                  context: context,
+                  position: RelativeRect.fromLTRB(25.0, 25.0, 0.0, 0.0),
+                  items: [
+                    PopupMenuItem<String>(
+                      value: 'Order status',
+                      child: Text('Order status'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'Order History',
+                      child: Text('Order history'),
+                    ),
+                  ],
+                  elevation: 8.0,
+                ).then((value) {
+                  if (value == 'Order status') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserListPage()),
+                    );
+                  } else if (value == 'Order History') {
+                    Navigator.pushNamed(context, '/OrderHistoryPage');
+                  }
+                });
               },
-              child: Text(
-                'Order Status',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ),
           ],
-          ),
-          body: SingleChildScrollView(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/OrderHistoryPage');
-                              },
-                              child: Text(
-                                'view my order History',
-                                style: TextStyle(color: Color(0xff2b4260),fontSize: 18),
-                              ),
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5,
-                                  vertical: 10,
-                                ),
-                              ),
-                            ),
+        ),
+        body: cartItems.isEmpty
+            ? Center(
+                child: Text(
+                  'Currently you do not have any orders',
+                  style: TextStyle(
+                    fontSize: PhoneSize(context).adaptFontSize(25),
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(children: [
                             ElevatedButton(
                               onPressed: _pickFile,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xff2b4260),
-                                padding: EdgeInsets.all(10),
+                                padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 10),
+                              
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
                               ),
                               child: Row(
-                                mainAxisSize: MainAxisSize.min,
+
                                 children: [
                                   Icon(
                                     Icons.attach_file,
                                     color: Colors.white,
                                   ),
                                   Text(
-                                    fileSelected ? fileName : 'Upload prescription',
+                                    fileSelected
+                                        ? fileName
+                                        : 'Upload prescription',
                                     style: TextStyle(color: Colors.white),
                                   ), // Display file name if selected, otherwise default text
                                 ],
                               ),
                             ),
                           ]),
-                    ),
-                    SizedBox(
-                      height: PhoneSize(context).adaptHeight(20),
-                    ),
-                    cartItems.isEmpty
-                        ? Text(
-                            'Currently you do not have any orders',
-                            style: TextStyle(
-                                fontSize: PhoneSize(context).adaptFontSize(20),
-                               ),
-                          )
-                        :
+                        ),
+                        SizedBox(
+                          height: PhoneSize(context).adaptHeight(20),
+                        ),
+
                         // Your order form fields here
                         ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: cartItems.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                child: ListTile(
-                                  title: Text(cartItems[index]['pharmacyName']),
-                                  subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          'Medicine: ${cartItems[index]['medicineName']}'),
-                                      Text(
-                                          'Price: ${cartItems[index]['medicinePrice']}'),
-                                      Text(
-                                          'Category: ${cartItems[index]['medicineCategory']}'),
-                                      Text(
-                                          'Location: ${cartItems[index]['pharmacyLocation']}'),
-                                    ],
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () => deleteCartItem(index),
-                                  ),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: cartItems.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              child: ListTile(
+                                title: Text(cartItems[index]['pharmacyName']),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        'Medicine: ${cartItems[index]['medicineName']}'),
+                                    Text(
+                                        'Price: ${cartItems[index]['medicinePrice']}'),
+                                    Text(
+                                        'Category: ${cartItems[index]['medicineCategory']}'),
+                                    Text(
+                                        'Location: ${cartItems[index]['pharmacyLocation']}'),
+                                  ],
                                 ),
-                              );
-                            },
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete,color: Colors.red,),
+                                  onPressed: () => deleteCartItem(index),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: PhoneSize(context).adaptHeight(10),
+                        ),
+                        // Payment options
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Select Payment Method:',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            RadioListTile<String>(
+                              title: Text('Pay after delivery'),
+                              value: 'Pay after delivery',
+                              groupValue: selectedPaymentMethod,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPaymentMethod = value;
+                                });
+                              },
+                            ),
+                            RadioListTile<String>(
+                              title: Text('Pay online before delivery'),
+                              value: 'Pay online before delivery',
+                              groupValue: selectedPaymentMethod,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPaymentMethod = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        // Button to pick files
+                        SizedBox(
+                          height: PhoneSize(context).adaptHeight(10),
+                        ),
+
+                        // Place order button
+                        ElevatedButton(
+                          onPressed: _completePaymentAndPlaceOrder,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xff2b4260),
+                            padding: EdgeInsets.symmetric(vertical: 15.0),
+                            minimumSize: Size(
+                              MediaQuery.of(context).size.width * 0.9,
+                              0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0),
+                            ),
                           ),
-                    SizedBox(
-                      height: PhoneSize(context).adaptHeight(10),
-                    ),
-                    // Payment options
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Select Payment Method:',
-                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
-                        ),
-                        RadioListTile<String>(
-                          title: Text('Pay after delivery'),
-                          value: 'Pay after delivery',
-                          groupValue: selectedPaymentMethod,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedPaymentMethod = value;
-                            });
-                          },
-                        ),
-                        RadioListTile<String>(
-                          title: Text('Pay online before delivery'),
-                          value: 'Pay online before delivery',
-                          groupValue: selectedPaymentMethod,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedPaymentMethod = value;
-                            });
-                          },
+                          child: _isLoading
+                              ? CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation(Colors.teal),
+                                )
+                              : Text(
+                                  'Complete payments & place order',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
                         ),
                       ],
                     ),
-                    // Button to pick files
-                    SizedBox(
-                      height: PhoneSize(context).adaptHeight(10),
-                    ),
-        
-                    // Place order button
-                    ElevatedButton(
-                      onPressed: _completePaymentAndPlaceOrder,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff2b4260),
-                        padding: EdgeInsets.all(15),
-                        minimumSize: Size(
-                            double.infinity, 50.0), // Set fixed width and height
-                      ),
-                      child: _isLoading
-                          ? CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(Colors.teal),
-                            )
-                          : Text(
-                              'Complete payments & place order',style: TextStyle(color: Colors.white),
-                            ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          bottomNavigationBar: BottomNavigation(),
+        bottomNavigationBar: BottomNavigation(),
       ),
     );
   }

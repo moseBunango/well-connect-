@@ -97,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 20),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -105,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Text(
                 "Users Address",
                 style: TextStyle(
-                  fontSize: PhoneSize(context).adaptFontSize(24),
+                  fontSize: PhoneSize(context).adaptFontSize(25),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -260,9 +260,22 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   _updateProfile();
                 },
-                child: Text("Update profile",style: TextStyle(color: Colors.white),),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff2b4260), padding: EdgeInsets.all(15.0)),
+                child: Text("Update profile",  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: PhoneSize(context).adaptFontSize(20),
+                  ),),
+                 style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xff2b4260),
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                  minimumSize: Size(
+                    MediaQuery.of(context).size.width * 0.8,
+                    0,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                ),
               ),
             ],
           ),

@@ -77,7 +77,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(10),
             child: Column(
               children: [
                 cartHistoryItems.isEmpty
@@ -106,7 +106,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           ],
                         ),
                         trailing: IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: Icon(Icons.delete,color: Colors.red,),
                           onPressed: () => deleteCartHistoryItem(index),
                         ),
                       ),

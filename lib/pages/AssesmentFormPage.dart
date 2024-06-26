@@ -23,7 +23,6 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
   bool _isLoggingin = false;
 
   Future<void> riskAssesment() async {
-
     setState(() {
       _isLoggingin = true;
     });
@@ -57,8 +56,8 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
         ),
       );
       print("Hey");
-     // Trigger ChatGPT route
-      final chatGptResult = await Api().postToChatgpt(route:'/chatgpt/ask');
+      // Trigger ChatGPT route
+      final chatGptResult = await Api().postToChatgpt(route: '/chatgpt/ask');
       print('ChatGPT Result: ${chatGptResult.body}');
       final chatGptResponse = jsonDecode(chatGptResult.body);
 
@@ -68,19 +67,23 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
         print('ChatGPT Message: $chatGptMessage');
 
         // Fetch risk results
-        final riskResultsResult = await Api().getChatgptData(route: '/getRiskResults');
+        final riskResultsResult =
+            await Api().getChatgptData(route: '/getRiskResults');
         print('Risk Results: ${riskResultsResult.body}');
         final riskResultsResponse = jsonDecode(riskResultsResult.body);
 
         if (riskResultsResponse['status']) {
-         // Ensure the data is a map and not a list
+          // Ensure the data is a map and not a list
           if (riskResultsResponse['data'] is List) {
-            final riskResults = riskResultsResponse['data'][0] as Map<String, dynamic>;
+            final riskResults =
+                riskResultsResponse['data'][0] as Map<String, dynamic>;
             final responseMessage = riskResults['response'];
             // Navigate to a new page to display results
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Assesmentresults(results:{'response': responseMessage})),
+              MaterialPageRoute(
+                  builder: (context) =>
+                      Assesmentresults(results: {'response': responseMessage})),
             );
           } else {
             throw Exception('Unexpected data format');
@@ -95,24 +98,24 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
       // Registration failed
       print('Failed to send: ${response['message']}');
       // Show error message
-        String errorMessage = '';
-        int errorNumber = 1;
-        response['error'].forEach((field, errors) {
+      String errorMessage = '';
+      int errorNumber = 1;
+      response['error'].forEach((field, errors) {
         errors.forEach((error) {
-        errorMessage += '$errorNumber. $error \n';
-        errorNumber++;
-  });
-});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Assesment failed:\n $errorMessage'),
-            backgroundColor: Colors.red,
-          ),
-        );
+          errorMessage += '$errorNumber. $error \n';
+          errorNumber++;
+        });
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Assesment failed:\n $errorMessage'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
     setState(() {
-        _isLoggingin = false;
-      });
+      _isLoggingin = false;
+    });
   }
 
   void _showErrorPage() {
@@ -146,181 +149,127 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
         elevation: 0.0, // Remove shadow
       ),
       body: Padding(
-          padding: EdgeInsets.all(16),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text(
-                    "Task to be filled",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: PhoneSize(context).adaptFontSize(20),
+        padding: EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Title with a cleaner font and spacing
+              Text(
+                "Task to be filled",
+                style: TextStyle(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto', // or any other desired font family
+                ),
+              ),
+              SizedBox(height: 16.0),
+
+              // Form fields with improved layout
+              Form(
+                child: Column(
+                  children: [
+                    // Age field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Age',
+                        hintText: 'Enter your age',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: ageController,
                     ),
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: Text('Age',
-                      style: TextStyle(
-                      fontWeight: FontWeight.bold,))),
-                      SizedBox(
-                        width: PhoneSize(context).adaptHeight(40),
+                    SizedBox(height: 16.0),
+
+                    // Weight field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Weight (kg)',
+                        hintText: 'Enter your weight',
+                        border: OutlineInputBorder(),
                       ),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Age',
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          controller:
-                              ageController, // Add your controller if needed
-                        ),
+                      keyboardType: TextInputType.number,
+                      controller: weightController,
+                    ),
+                    SizedBox(height: 16.0),
+
+                    // Height field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Height (ft)',
+                        hintText: 'Enter your height',
+                        border: OutlineInputBorder(),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: Text('weight',
-                      style: TextStyle(
-                      fontWeight: FontWeight.bold,))),
-                      SizedBox(
-                        width:PhoneSize(context).adaptHeight(40),
+                      keyboardType: TextInputType.number,
+                      controller: heightController,
+                    ),
+                    SizedBox(height: 16.0),
+
+                    // Blood pressure field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Blood Pressure (mmHg)',
+                        hintText: 'e.g. 60/40',
+                        border: OutlineInputBorder(),
                       ),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'weight (kg)',
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          controller:
-                              weightController, // Add your controller if needed
-                        ),
+                      keyboardType: TextInputType.number,
+                      controller: bloodPressureController,
+                    ),
+                    SizedBox(height: 16.0),
+
+                    // Blood sugar field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Blood Sugar Level (mmol/L)',
+                        hintText: 'Enter sugar level',
+                        border: OutlineInputBorder(),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: Text('height',
-                      style: TextStyle(
-                      fontWeight: FontWeight.bold,))),
-                      SizedBox(
-                        width:PhoneSize(context).adaptHeight(40),
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'height (ft)',
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          controller:
-                              heightController, // Add your controller if needed
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: Text('blood pressure',
-                      style: TextStyle(
-                      fontWeight: FontWeight.bold,))),
-                      SizedBox(
-                        width: PhoneSize(context).adaptHeight(40),
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'eg.60/40 (mmHg)',
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          controller:
-                              bloodPressureController, // Add your controller if needed
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: Text('blood sugar level',
-                      style: TextStyle(
-                      fontWeight: FontWeight.bold,))),
-                      SizedBox(
-                        width: PhoneSize(context).adaptHeight(40),
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'sugar (mmol/L)',
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          controller:
-                              bloodSugarController, // Add your controller if needed
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(20),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: bloodSugarController,
+                    ),
+                    SizedBox(height: 16.0),
+
+                    // Description field with a modern multi-line TextForm
+                    TextFormField(
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(
-                          hintText: "add description \n (optional)",
-                          border: OutlineInputBorder()),
+                        labelText: 'Description (Optional)',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: PhoneSize(context).adaptHeight(10),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      riskAssesment();
-                    },
-                    child:  _isLoggingin
-                        ? CircularProgressIndicator()
-                        : Text(
-                            "perform Risk Assesment",style: TextStyle(color: Colors.white),
-                          ),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff2b4260)
-                        , minimumSize: Size(double.infinity, 50.0),),
-                  ),
-                ],
+                    SizedBox(height: 16.0),
+                  ],
+                ),
               ),
-            ),
-          )),
+
+              // Risk Assessment button with improved style
+              ElevatedButton(
+                onPressed: () {
+                  riskAssesment();
+                },
+                child: _isLoggingin
+                    ? CircularProgressIndicator()
+                    : Text(
+                        "Perform Risk Assesment",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: PhoneSize(context).adaptFontSize(20),
+                        ),
+                      ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(
+                      0xff2b4260), // Use primary color for better theme integration
+                  minimumSize: Size(double.infinity, 50.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       bottomNavigationBar: BottomNavigation(),
     );
   }
