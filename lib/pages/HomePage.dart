@@ -6,6 +6,7 @@ import 'package:well_connect_app/pages/PharmacyDetailsPage.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:well_connect_app/components/API/PhoneSize.dart';
+import 'package:well_connect_app/pages/ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,14 +24,44 @@ class _HomePageState extends State<HomePage> {
   String searchQuery = "";
   TextEditingController searchController = TextEditingController();
 
+  String? email;
+  String? username;
+  String? firstName;
+  String? lastName;
+  String? street;
+  String? city;
+  String? country;
+  String? phoneNumber;
+  DateTime? dateOfBirth;
+  String? gender;
+
   void initState() {
     super.initState();
     fetchPharmacies();
+    getProfileDetails();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _itemWidth = MediaQuery.of(context).size.width;
     });
     _startAutoScroll();
     // Call the method to fetch pharmacies when the widget initializes
+  }
+
+  Future<void> getProfileDetails() async {
+    final result = await Api().getProfileData(route: '/auth/getProfile');
+    final response = jsonDecode(result.body);
+
+    setState(() {
+      email = response['data']['email'];
+      username = response['data']['username'];
+      firstName = response['data']['first_name'];
+      lastName = response['data']['last_name'];
+      street = response['data']['street'];
+      city = response['data']['city'];
+      country = response['data']['country'];
+      phoneNumber = response['data']['phone_number'];
+      dateOfBirth = DateTime.parse(response['data']['date_of_birth']);
+      gender = response['data']['gender'];
+    });
   }
 
   @override
@@ -183,9 +214,42 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xff2b4260),
-        ),
+        appBar: firstName.toString().isNotEmpty
+            ? AppBar(
+                backgroundColor: Color(0xff2b4260),
+              )
+            : AppBar(
+                backgroundColor: Color(0xff2b4260),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.warning, color: Colors.red),
+                    onPressed: () {
+                      showMenu(
+                        context: context,
+                        position: RelativeRect.fromLTRB(25.0, 25.0, 0.0, 0.0),
+                        items: [
+                          PopupMenuItem<String>(
+                            value: 'reg',
+                            child: Text(
+                              'Click here! to complete registration',
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.red),
+                            ),
+                          ),
+                        ],
+                        elevation: 8.0,
+                      ).then((value) {
+                        if (value == 'reg')
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfilePage()),
+                          );
+                      });
+                    },
+                  ),
+                ],
+              ),
         body: SafeArea(
           child: SingleChildScrollView(
             child:
@@ -211,7 +275,6 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  
                     Text(
                       "Welcome to",
                       style: TextStyle(
@@ -338,7 +401,8 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  color: Color(0xff2b4260).withOpacity(0.1), // Faint gray background
+                  color: Color(0xff2b4260)
+                      .withOpacity(0.1), // Faint gray background
                   child: TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/AssesmentFormPage');
@@ -354,7 +418,10 @@ class _HomePageState extends State<HomePage> {
                             fontSize: PhoneSize(context).adaptFontSize(20),
                           ),
                         ),
-                        Icon(Icons.arrow_forward_sharp,color: Colors.black,),
+                        Icon(
+                          Icons.arrow_forward_sharp,
+                          color: Colors.black,
+                        ),
                       ],
                     ),
                   ),
