@@ -97,42 +97,45 @@ class PharmacyDetailsPage extends StatelessWidget {
   }
 
   Widget _buildMedicineTable(List<dynamic>? medicines, BuildContext context) {
-    ScreenUi screenUi = ScreenUi(context);
-    if (medicines == null || medicines.isEmpty) {
-      return Container(
-          margin: EdgeInsets.only(top: 100),
-          child: Center(
-              child: Text(
-            'No NCD medicines available',
-            style: TextStyle(
-              fontSize: screenUi.scaleFontSize(18.0),
-              color: Colors.red,
-            ),
-          )));
-    }
+   ScreenUi screenUi = ScreenUi(context);
+  if (medicines == null || medicines.isEmpty) {
+    return Container(
+      margin: EdgeInsets.only(top: 100),
+      child: Center(
+        child: Text(
+          'No NCD medicines available',
+          style: TextStyle(
+            fontSize: screenUi.scaleFontSize(18.0),
+            color: Colors.red,
+          ),
+        ),
+      ),
+    );
+  }
 
-    return DataTable(
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: DataTable(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
       ),
-      columns: const [
+      columns: [
         DataColumn(
-            label:
-                Text('Image', style: TextStyle(fontWeight: FontWeight.bold))),
+          label: Text('Image', style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenUi.scaleFontSize(16.0),)),
+        ),
         DataColumn(
-            label: Text('Medicine',
-                style: TextStyle(fontWeight: FontWeight.bold))),
+          label: Text('Medicine',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenUi.scaleFontSize(16.0),)),
+        ),
         DataColumn(
-            label: Text('Category',
-                style: TextStyle(fontWeight: FontWeight.bold))),
+          label: Text('Category',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenUi.scaleFontSize(16.0),)),
+        ),
         DataColumn(
-            label: Text('Price Tz',
-                style: TextStyle(fontWeight: FontWeight.bold))),
+          label: Text('Price Tz',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenUi.scaleFontSize(16.0),)),
+        ),
       ],
-      rows: medicines
-          .map((medicine) => _medicineDataRow(medicine, context))
-          .toList(),
-    );
+      rows: medicines.map((medicine) => _medicineDataRow(medicine, context)).toList(),
+    ),
+  );
   }
 
   DataRow _medicineDataRow(
