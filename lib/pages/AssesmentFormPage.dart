@@ -208,7 +208,7 @@ class _AsssesmentFormState extends State<AsssesmentForm> {
                         labelText: 'Blood Pressure (mmHg)',
                         border: OutlineInputBorder(),
                       ),
-                      keyboardType: TextInputType.number,
+                      
                       controller: bloodPressureController,
                     ),
                     SizedBox(height: screenUi.scaleHeight(10.0)),

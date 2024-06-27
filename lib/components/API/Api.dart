@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
 
-  final String apiUrl = 'http://192.168.0.107:8000/api';
+  final String apiUrl = 'http://10.42.0.50:8000/api';
 
 
   Future<void> storeAuthToken(String token) async {
