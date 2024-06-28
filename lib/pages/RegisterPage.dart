@@ -229,8 +229,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         },
                         icon: Icon(
                           _obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: Color(0xff2b4260),
                         ),
                       ),

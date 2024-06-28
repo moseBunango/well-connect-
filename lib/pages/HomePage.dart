@@ -213,15 +213,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     ScreenUi screenUi = ScreenUi(context);
-    
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: firstName.toString().isNotEmpty
+        appBar: gender == null
             ? AppBar(
-                backgroundColor: Color(0xff2b4260),
-              )
-            : AppBar(
                 backgroundColor: Color(0xff2b4260),
                 actions: [
                   IconButton(
@@ -235,8 +232,9 @@ class _HomePageState extends State<HomePage> {
                             value: 'reg',
                             child: Text(
                               'Click here! to complete registration',
-                              style:
-                                  TextStyle(fontSize: screenUi.scaleFontSize(15.0), color: Colors.red),
+                              style: TextStyle(
+                                  fontSize: screenUi.scaleFontSize(15.0),
+                                  color: Colors.red),
                             ),
                           ),
                         ],
@@ -252,6 +250,9 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ],
+              )
+            : AppBar(
+                backgroundColor: Color(0xff2b4260),
               ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -273,7 +274,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                padding: EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
+                padding:
+                    EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       "Welcome to",
                       style: TextStyle(
-                     fontSize: screenUi.scaleFontSize(25.0),
+                        fontSize: screenUi.scaleFontSize(25.0),
                         color: Colors.white,
                       ),
                     ),
@@ -294,13 +296,15 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.white,
                       ),
                     ),
-                      SizedBox(height: screenUi.scaleHeight(16.0)),
+                    SizedBox(height: screenUi.scaleHeight(16.0)),
                   ],
                 ),
               ),
               Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0), vertical: screenUi.scaleWidth(18.0)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screenUi.scaleWidth(16.0),
+                      vertical: screenUi.scaleWidth(18.0)),
                   child: TextFormField(
                     onChanged: (value) {
                       setState(() {
@@ -348,7 +352,8 @@ class _HomePageState extends State<HomePage> {
                 ),
 
               Container(
-                padding: EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
+                padding:
+                    EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
                 child: Text(
                   "Available Pharmacies",
                   style: TextStyle(
@@ -356,10 +361,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-             SizedBox(height: screenUi.scaleHeight(5.0)),
+              SizedBox(height: screenUi.scaleHeight(5.0)),
               Container(
-                 height: screenUi
-                        .scaleWidth(250.0),  // Adjust height as needed
+                height: screenUi.scaleWidth(250.0), // Adjust height as needed
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: _scrollController,
@@ -391,14 +395,17 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   "Health assesment",
                   style: TextStyle(
-                     fontSize: screenUi.scaleFontSize(20.0),
+                    fontSize: screenUi.scaleFontSize(20.0),
                   ),
                 ),
               ),
               Padding(
-                padding:  EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
+                padding:
+                    EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(16.0)),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: screenUi.scaleWidth(5.0), vertical: screenUi.scaleWidth(5.0)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screenUi.scaleWidth(5.0),
+                      vertical: screenUi.scaleWidth(5.0)),
                   color: Color(0xff2b4260)
                       .withOpacity(0.1), // Faint gray background
                   child: TextButton(
@@ -413,7 +420,7 @@ class _HomePageState extends State<HomePage> {
                           "take NCD risk test",
                           style: TextStyle(
                             color: Colors.black,
-                         fontSize: screenUi.scaleFontSize(18.0),
+                            fontSize: screenUi.scaleFontSize(18.0),
                           ),
                         ),
                         Icon(

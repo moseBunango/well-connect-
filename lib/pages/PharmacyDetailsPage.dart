@@ -138,6 +138,8 @@ class PharmacyDetailsPage extends StatelessWidget {
   );
   }
 
+  
+
   DataRow _medicineDataRow(
       Map<String, dynamic> medicine, BuildContext context) {
     return DataRow(
