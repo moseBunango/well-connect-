@@ -196,7 +196,7 @@ class _FlutterwavePaymentState extends State<FlutterwavePayment> {
 
     final Flutterwave flutterwave = Flutterwave(
         context: context,
-        publicKey: 'FLWPUBK_TEST-036bf6c16f5b83ff1154c92f875167b0-X',
+        publicKey: 'FLWPUBK_TEST-09224e46bb1d25575a54d8333253c3be-X',
         currency: this.selectedCurrency,
         redirectUrl: 'https://facebook.com',
         txRef: Uuid().v1(),

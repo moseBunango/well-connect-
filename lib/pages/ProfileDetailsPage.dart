@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:well_connect_app/components/Ui.dart';
+import 'package:well_connect_app/pages/HomePage.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -204,49 +205,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   }
 
   Future<bool> _onWillPop() async {
-    ScreenUi screenUi = ScreenUi(context);
-    bool shouldLogout = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Confirm Exit'),
-        content: Text(
-          'Do you really want to exit?',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-
-            fontSize:
-                screenUi.scaleWidth(16.0), // Adjusted font size for better fit
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(
-              'No',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-                fontSize: screenUi
-                    .scaleWidth(16.0), // Adjusted font size for better fit
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(
-              'Yes',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-                fontSize: screenUi
-                    .scaleWidth(16.0), // Adjusted font size for better fit
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-    return shouldLogout;
+     Navigator.of(context).pushReplacement(
+    MaterialPageRoute(builder: (context) => HomePage()),
+  );
+  return false;
   }
 
   @override
