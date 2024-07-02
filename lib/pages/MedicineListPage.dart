@@ -3,6 +3,7 @@ import 'package:well_connect_app/components/API/Api.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:well_connect_app/components/Ui.dart';
+import 'package:well_connect_app/pages/Maps.dart';
 
 class MedicineListsPage extends StatefulWidget {
   final Map<String, dynamic> medicineData;
@@ -163,9 +164,22 @@ class _MedicineListsPageState extends State<MedicineListsPage> {
             DataCell(Text(
               pharmacy['location'].toString(),
             )),
-            DataCell(Text(
-              pharmacy['distance'].toString(),
-            )),
+            DataCell(TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Maps(
+                                    pharmacyLocation: pharmacy['location'],
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.location_on, color: Colors.red),
+                            label: Text(
+                              '',
+                            ),
+                          ),),
           ]);
         }).toList();
       }).toList(),

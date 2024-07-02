@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:well_connect_app/components/Ui.dart';
 import 'package:well_connect_app/pages/FlutterWavePayment.dart';
+import 'package:well_connect_app/pages/HomePage.dart';
 import 'package:well_connect_app/pages/ThankYouPage.dart';
 import 'package:well_connect_app/pages/user_list_page.dart';
 
@@ -249,24 +250,10 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Future<bool> _onWillPop() async {
-    bool shouldLogout = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Confirm Exit'),
-        content: Text('Do you really want to exit?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('No'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Yes'),
-          ),
-        ],
-      ),
-    );
-    return shouldLogout;
+     Navigator.of(context).pushReplacement(
+    MaterialPageRoute(builder: (context) => HomePage()),
+  );
+  return false;
   }
 
   @override
